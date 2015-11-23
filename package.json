@@ -1,15 +1,15 @@
 {
-    "name": "deepEqual-x",
+    "name": "deep-equal-x",
     "version": "1.0.0",
-    "description": "node's assert.deepEqual algorithm.",
-    "homepage": "http://xotic750.github.io/deepEqual-x/",
+    "description": "node's assert.deep-equal algorithm.",
+    "homepage": "http://xotic750.github.io/deep-equal-x/",
     "author": {
         "name": "Graham Fairweather",
         "email": "xotic750@gmail.com"
     },
     "copyright": "Copyright (c) 2015",
     "keywords": [
-        "deepEqual",
+        "deep-equal",
         "library",
         "javascript",
         "testing",
@@ -25,10 +25,10 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Xotic750/deepEqual-x.git"
+        "url": "https://github.com/Xotic750/deep-equal-x.git"
     },
     "bugs": {
-        "url": "https://github.com/Xotic750/deepEqual-x/issues"
+        "url": "https://github.com/Xotic750/deep-equal-x/issues"
     },
     "dependencies": {
       "define-properties": "^1.1.2",
@@ -51,7 +51,7 @@
     "scripts": {
       "test": "jasmine-node --matchall tests/spec/",
       "style": "jscs index.js",
-      "build": "browserify -e index.js -o lib/deepEqual-x.js -u 'crypto' -s returnExports",
-      "build-uglify": "uglifyjs lib/deepEqual-x.js -o lib/deepEqual-x.min.js --compress unused=false,dead_code=false --keep-fnames --mangle --beautify ascii_only=true,beautify=false --source-map lib/deepEqual-x.map"
+      "build": "browserify -e index.js -o lib/deep-equal-x.js -u 'crypto' -s returnExports",
+      "build-uglify": "uglifyjs lib/deep-equal-x.js -o lib/deep-equal-x.min.js --compress unused=false,dead_code=false --keep-fnames --mangle --beautify ascii_only=true,beautify=false --source-map lib/deep-equal-x.map"
     }
 }

@@ -1,11 +1,11 @@
 /**
- * @file {@link http://xotic750.github.io/deepEqual-x/ deepEqual-x}
- * node's assert.deepEqual algorithm.
+ * @file {@link http://xotic750.github.io/deep-equal-x/ deep-equal-x}
+ * node's deepEqual algorithm.
  * @version 1.0.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module deepEqual-x
+ * @module deep-equal-x
  */
 
 /*jslint maxlen:80, es6:false, this:true, white:true */
