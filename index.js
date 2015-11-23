@@ -1,7 +1,7 @@
 /**
  * @file {@link http://xotic750.github.io/deep-equal-x/ deep-equal-x}
  * node's deepEqual algorithm.
- * @version 1.0.0
+ * @version 1.0.1
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -133,19 +133,7 @@
     return true;
   }
 
-  module.exports = {};
   defProps(module.exports, {
-    deepEqual: deepEqual,
-    extras: {}
-  });
-
-  defProps(module.exports.extras, {
-    isRegExp: isRegExp,
-    isDate: isDate,
-    isArguments: isArguments,
-    isPrimitive: isPrimitive,
-    isObject: isObject,
-    isBuffer: isBuffer,
-    defProps: defProps
+    deepEqual: deepEqual
   });
 }());
