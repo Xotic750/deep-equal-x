@@ -1,0 +1,57 @@
+{
+    "name": "deepEqual-x",
+    "version": "1.0.0",
+    "description": "node's assert.deepEqual algorithm.",
+    "homepage": "http://xotic750.github.io/deepEqual-x/",
+    "author": {
+        "name": "Graham Fairweather",
+        "email": "xotic750@gmail.com"
+    },
+    "copyright": "Copyright (c) 2015",
+    "keywords": [
+        "deepEqual",
+        "library",
+        "javascript",
+        "testing",
+        "nodejs",
+        "browser",
+        "commonjs",
+        "test"
+    ],
+    "main": "index.js",
+    "engines": {
+        "node": "*"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Xotic750/deepEqual-x.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Xotic750/deepEqual-x/issues"
+    },
+    "dependencies": {
+      "define-properties": "^1.1.2",
+      "is-regex": "^1.0.3",
+      "is-callable": "^1.1.0",
+      "is-date-object": "^1.0.1",
+      "is-arguments": "^1.0.2",
+      "is-primitive": "^2.0.0",
+      "is-object": "^1.0.1",
+      "is-buffer": "^1.1.0"
+    },
+    "devDependencies": {
+      "es5-shim": "^4.3.1",
+      "json3": "^3.3.2",
+      "jscs": "^2.5.1",
+      "uglify-js": "^2.6.1",
+      "browserify": "12.0.1",
+      "jasmine-node": "^1.14.5"
+    },
+    "scripts": {
+      "test": "jasmine-node --matchall tests/spec/",
+      "style": "jscs index.js",
+      "build": "browserify -e index.js -o lib/deepEqual-x.js -u 'crypto' -s returnExports",
+      "build-uglify": "uglifyjs lib/deepEqual-x.js -o lib/deepEqual-x.min.js --compress unused=false,dead_code=false --keep-fnames --mangle --beautify ascii_only=true,beautify=false --source-map lib/deepEqual-x.map"
+    }
+}
