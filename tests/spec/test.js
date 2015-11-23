@@ -20,9 +20,9 @@
     }
     require('json3').runInContext(null, JSON);
     require('es6-shim');
-    deepEqual = require('../../index.js').deepEqual;
+    deepEqual = require('../../index.js');
   } else {
-    deepEqual = returnExports.deepEqual;
+    deepEqual = returnExports;
   }
 
   describe('deepEqual - 7.2', function () {

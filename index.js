@@ -1,7 +1,7 @@
 /**
  * @file {@link http://xotic750.github.io/deep-equal-x/ deep-equal-x}
  * node's deepEqual algorithm.
- * @version 1.0.1
+ * @version 1.0.2
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -133,7 +133,5 @@
     return true;
   }
 
-  defProps(module.exports, {
-    deepEqual: deepEqual
-  });
+  module.exports = deepEqual;
 }());
