@@ -1,7 +1,7 @@
 /**
  * @file {@link http://xotic750.github.io/deep-equal-x/ deep-equal-x}
  * node's deepEqual algorithm.
- * @version 1.0.2
+ * @version 1.0.3
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -13,24 +13,56 @@
 /*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:false, plusplus:true, maxparams:5, maxdepth:3,
-  maxstatements:26, maxcomplexity:14 */
+  es3:true, esnext:false, plusplus:true, maxparams:3, maxdepth:3,
+  maxstatements:46, maxcomplexity:23 */
 
 /*global require, module */
 
 (function () {
   'use strict';
 
-  var defProps = require('define-properties'),
-    isRegExp = require('is-regex'),
+  var isRegExp = require('is-regex'),
     isDate = require('is-date-object'),
     isArguments = require('is-arguments'),
     isPrimitive = require('is-primitive'),
     isObject = require('is-object'),
     isBuffer = require('is-buffer');
 
-  function deepEqual(actual, expected) {
-    var length, i;
+  /**
+   * Tests for deep equality. Primitive values are compared with the equal
+   * comparison operator ( == ). This only considers enumerable properties.
+   * It does not test object prototypes, attached symbols, or non-enumerable
+   * properties. This can lead to some potentially surprising results. If
+   * `strict` is `true` then Primitive values are compared with the strict
+   * equal comparison operator ( === ).
+   *
+   * @param {*} actual First comparison object.
+   * @param {*} expected Second comparison object.
+   * @param {boolean} [strict] Comparison mode.
+   * @return {boolean} `true` if `actual` and `expected` are deemed equal,
+   *  otherwise `false`.
+   * @see https://nodejs.org/api/assert.html
+   * @example
+   *
+   * deepEqual(Error('a'), Error('b'));
+   * // => true
+   * // This does not return `false` because the properties on the  Error object
+   * // are non-enumerable:
+   *
+   * deepEqual(4, '4');
+   * // => true
+   *
+   * deepEqual({ a: 4, b: '1' }, {  b: '1', a: 4 });
+   * // => true
+   *
+   * deepEqual(new Date(), new Date(2000, 3, 14));
+   * // => false
+   *
+   * deepEqual(4, '4', true);
+   * // => false
+   */
+  module.exports = function deepEqual(actual, expected, strict) {
+    var length, i, aIsArgs,bIsArgs, ka, kb, key;
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
       return true;
@@ -70,7 +102,7 @@
     // equivalence is determined by ==.
     if (!isObject(actual) && !isObject(expected)) {
       /*jshint eqeqeq:false */
-      return actual == expected;
+      return strict === true ? actual === expected : actual == expected;
     }
 
     // 7.5 For all other Object pairs, including Array objects, equivalence is
@@ -79,35 +111,30 @@
     // (although not necessarily the same order), equivalent values for every
     // corresponding key, and an identical 'prototype' property. Note: this
     // accounts for both named and indexed properties on Arrays.
-    return objEquiv(actual, expected);
-  }
-
-  function objEquiv(a, b) {
     /*jshint eqnull:true */
-    if (a == null || b == null) {
+    if (actual == null || expected == null) {
       return false;
     }
     // an identical 'prototype' property.
-    if (a.prototype !== b.prototype) {
+    if (actual.prototype !== expected.prototype) {
       return false;
     }
-    // if one is a primitive, the other must be same
-    if (isPrimitive(a) || isPrimitive(b)) {
-      return a === b;
+    // if one is actual primitive, the other must be same
+    if (isPrimitive(actual) || isPrimitive(expected)) {
+      return actual === expected;
     }
-    var aIsArgs = isArguments(a),
-        bIsArgs = isArguments(b);
+    aIsArgs = isArguments(actual);
+    bIsArgs = isArguments(expected);
     if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) {
       return false;
     }
     if (aIsArgs) {
-      a = Array.prototype.slice.call(a);
-      b = Array.prototype.slice.call(b);
-      return deepEqual(a, b);
+      actual = Array.prototype.slice.call(actual);
+      expected = Array.prototype.slice.call(expected);
+      return deepEqual(actual, expected);
     }
-    var ka = Object.keys(a),
-        kb = Object.keys(b),
-        key, i;
+    ka = Object.keys(actual);
+    kb = Object.keys(expected);
     // having the same number of owned properties (keys incorporates
     // hasOwnProperty)
     if (ka.length !== kb.length) {
@@ -126,12 +153,10 @@
     //~~~possibly expensive deep test
     for (i = ka.length - 1; i >= 0; i -= 1) {
       key = ka[i];
-      if (!deepEqual(a[key], b[key])) {
+      if (!deepEqual(actual[key], expected[key])) {
         return false;
       }
     }
     return true;
-  }
-
-  module.exports = deepEqual;
+  };
 }());
