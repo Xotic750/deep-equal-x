@@ -3,6 +3,13 @@
 [deep-equal-x](http://xotic750.github.io/deep-equal-x/)
 node's deepEqual algorithm.
 
+**See**
+
+- https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master
+- https://david-dm.org/Xotic750/deep-equal-x.svg
+- https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg
+- https://badge.fury.io/js/deep-equal-x.svg
+
 **Version**: 1.0.3  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  

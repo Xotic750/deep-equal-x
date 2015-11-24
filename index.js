@@ -6,6 +6,10 @@
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
  * @module deep-equal-x
+ * @see https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master
+ * @see https://david-dm.org/Xotic750/deep-equal-x.svg
+ * @see https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg
+ * @see https://badge.fury.io/js/deep-equal-x.svg
  */
 
 /*jslint maxlen:80, es6:false, this:true, white:true */
