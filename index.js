@@ -21,20 +21,20 @@
  * </a>
  *
  * node's deepEqual algorithm.
- * @version 1.0.6
+ * @version 1.0.7
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
  * @module deep-equal-x
  */
 
-/*jslint maxlen:80, es6:false, this:true, white:true */
+/*jslint maxlen:80, es6:false, this:false, white:true */
 
 /*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:false, plusplus:true, maxparams:3, maxdepth:3,
-  maxstatements:44, maxcomplexity:23 */
+  es3:true, esnext:false, plusplus:true, maxparams:4, maxdepth:2,
+  maxstatements:40, maxcomplexity:21 */
 
 /*global require, module */
 
@@ -49,23 +49,20 @@
     isBuffer = require('is-buffer'),
     isString = require('is-string'),
     pSlice = Array.prototype.slice,
+    some = Array.prototype.some,
     // Check failure of by-index access of string characters (IE < 9)
     // and failure of `0 in boxedString` (Rhino)
     boxedString = Object('a'),
     hasBoxedStringBug = boxedString[0] !== 'a' || !(0 in boxedString),
     // Used to detect unsigned integer values.
     reIsUint = /^(?:0|[1-9]\d*)$/,
-    hasErrorEnumerables = [],
     ERROR = Error,
-    prop;
+    hasErrorEnumerables;
 
   try {
     throw new ERROR('a');
   } catch (e) {
-    for (prop in e) {
-      /*jslint forin:true */
-      hasErrorEnumerables.push(prop);
-    }
+    hasErrorEnumerables = Object.keys(e);
   }
 
   /**
@@ -74,7 +71,7 @@
    *
    * @private
    * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
+   * @return {boolean} Returns `true` if `value` is valid index, else `false`.
    */
   function isIndex(value) {
     var num = -1;
@@ -82,6 +79,24 @@
       num = Number(value);
     }
     return num > -1 && num % 1 === 0 && num < 4294967295;
+  }
+
+  /**
+   * Get an object's key avoiding boxed string bug. Specifically for boxed
+   * string bug fix and not general purpose.
+   *
+   * @private
+   * @param {Object} object The object to get the `value` from.
+   * @param {string} key The `key` reference to the `value`.
+   * @param {boolean} isStr Is the object a string.
+   * @param {boolean} isIdx Is the `key` a character index.
+   * @return {*} Returns the `value` referenced by the `key`.
+   */
+  function getItem(object, key, isStr, isIdx) {
+    if (isStr && isIdx) {
+      return object.charAt(key);
+    }
+    return object[key];
   }
 
   /**
@@ -132,22 +147,18 @@
    * // => false
    */
   module.exports = function deepEqual(actual, expected, strict) {
-    var length, i, ka, kb, aIsString, bIsString;
+    var ka, kb, aIsString, bIsString;
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
       return true;
     }
     if (isBuffer(actual) && isBuffer(expected)) {
-      length = actual.length;
-      if (length !== expected.length) {
+      if (actual.length !== expected.length) {
         return false;
       }
-      for (i = 0; i < length; i += 1) {
-        if (actual[i] !== expected[i]) {
-          return false;
-        }
-      }
-      return true;
+      return !some.call(actual, function (item, index) {
+        return item !== expected[index];
+      });
     }
 
     // 7.2. If the expected value is a Date object, the actual value is
@@ -227,24 +238,17 @@
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test
     return !ka.some(function (key, index) {
-      var isIdx, va, vb;
+      var isIdx;
       if (key !== kb[index]) {
         return true;
       }
       if (aIsString || bIsString) {
         isIdx = isIndex(key);
       }
-      if (aIsString && isIdx) {
-        va = actual.charAt(key);
-      } else {
-        va = actual[key];
-      }
-      if (bIsString && isIdx) {
-        vb = expected.charAt(key);
-      } else {
-        vb = expected[key];
-      }
-      return !deepEqual(va, vb);
+      return !deepEqual(
+        getItem(actual, key, aIsString, isIdx),
+        getItem(expected, key, bIsString, isIdx)
+      );
     });
   };
 }());

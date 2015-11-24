@@ -4,14 +4,18 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
-  maxstatements:29, maxcomplexity:3 */
+  maxstatements:31, maxcomplexity:4 */
 
-/*global expect, module, require, describe, it, returnExports*/
+/*global expect, module, require, describe, it, xit, returnExports*/
 
 (function () {
   'use strict';
 
-  var deepEqual;
+  var ifBufferSupport = typeof Buffer === 'function' ? it : xit,
+    ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit,
+    ifSymbolSupport = typeof Symbol === 'function' &&
+      typeof Symbol() === 'symbol' ? it : xit,
+    deepEqual;
 
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
@@ -114,7 +118,7 @@
 
   describe('deepEqual - instances', function () {
     /**
-     * Test constructor 2.
+     * Test constructor 1.
      *
      * @private
      * @constructor
@@ -175,9 +179,12 @@
       expect(deepEqual('a', {0: 'a'})).toBe(false);
       expect(deepEqual(1, {})).toBe(false);
       expect(deepEqual(true, {})).toBe(false);
-      if (typeof Symbol === 'symbol') {
-        expect(deepEqual(Symbol(), {})).toBe(false);
-      }
+    });
+  });
+
+  describe('deepEqual - ES6 symbols', function () {
+    ifSymbolSupport('compared to similar objects', function () {
+      expect(deepEqual(Symbol(), {})).toBe(false);
     });
   });
 
@@ -187,6 +194,28 @@
       expect(deepEqual(Object('a'), {0: 'a'})).toBe(true);
       expect(deepEqual(Object(1), {})).toBe(true);
       expect(deepEqual(Object(true), {})).toBe(true);
+    });
+  });
+
+  describe('deepEqual - Buffer', function () {
+    ifBufferSupport('comparing two buffers', function () {
+      var b1 = new Buffer([1, 2, 3]),
+        b2 = new Buffer([1, 2, 3]),
+        b3 = new Buffer([1, 2]);
+      expect(deepEqual(b1, b1)).toBe(true);
+      expect(deepEqual(b1, b2)).toBe(true);
+      expect(deepEqual(b1, b3)).toBe(false);
+    });
+  });
+
+  describe('deepEqual - ArrayBuffer', function () {
+    ifArrayBufferSupport('comparing two array buffers', function () {
+      var b1 = new Int32Array([1, 2, 3]),
+        b2 = new Int32Array([1, 2, 3]),
+        b3 = new Int32Array([1, 2]);
+      expect(deepEqual(b1, b1)).toBe(true);
+      expect(deepEqual(b1, b2)).toBe(true);
+      expect(deepEqual(b1, b3)).toBe(false);
     });
   });
 
@@ -213,9 +242,26 @@
     it('`arguments` objects', function () {
       var args = (function () {
         return arguments;
-      })();
+      }());
       expect(deepEqual([], args)).toBe(false);
       expect(deepEqual(args, [])).toBe(false);
+    });
+  });
+
+  describe('deepEqual - arguments', function () {
+    it('comparing same type objects', function () {
+      var args1 = (function () {
+          return arguments;
+        }(1, 2, 3)),
+        args2 = (function () {
+          return arguments;
+        }(1, 2, 3)),
+        args3 = (function () {
+          return arguments;
+        }(1, 3, 4));
+      expect(deepEqual(args1, args1)).toBe(true);
+      expect(deepEqual(args1, args2)).toBe(true);
+      expect(deepEqual(args1, args3)).toBe(false);
     });
   });
 
@@ -322,7 +368,7 @@
 
   describe('deepEqual:strict - instances', function () {
     /**
-     * Test constructor 2.
+     * Test constructor 1.
      *
      * @private
      * @constructor
@@ -383,9 +429,12 @@
       expect(deepEqual('a', {0: 'a'}, true)).toBe(false);
       expect(deepEqual(1, {}, true)).toBe(false);
       expect(deepEqual(true, {}, true)).toBe(false);
-      if (typeof Symbol === 'symbol') {
-        expect(deepEqual(Symbol(), {}, true)).toBe(false);
-      }
+    });
+  });
+
+  describe('deepEqual:strict - ES6 symbols', function () {
+    ifSymbolSupport('compared to similar objects', function () {
+      expect(deepEqual(Symbol(), {}, true)).toBe(false);
     });
   });
 
@@ -417,13 +466,52 @@
     });
   });
 
+  describe('deepEqual - Buffer', function () {
+    ifBufferSupport('comparing two buffers', function () {
+      var b1 = new Buffer([1, 2, 3]),
+        b2 = new Buffer([1, 2, 3]),
+        b3 = new Buffer([1, 2]);
+      expect(deepEqual(b1, b1, true)).toBe(true);
+      expect(deepEqual(b1, b2, true)).toBe(true);
+      expect(deepEqual(b1, b3, true)).toBe(false);
+    });
+  });
+
+  describe('deepEqual:strict - ArrayBuffer', function () {
+    ifArrayBufferSupport('comparing two array buffers', function () {
+      var b1 = new Int32Array([1, 2, 3]),
+        b2 = new Int32Array([1, 2, 3]),
+        b3 = new Int32Array([1, 2]);
+      expect(deepEqual(b1, b1, true)).toBe(true);
+      expect(deepEqual(b1, b2, true)).toBe(true);
+      expect(deepEqual(b1, b3, true)).toBe(false);
+    });
+  });
+
   describe('deepEqual:strict - reflexivity', function () {
     it('`arguments` objects', function () {
       var args = (function () {
         return arguments;
-      })();
+      }());
       expect(deepEqual([], args), true).toBe(false);
       expect(deepEqual(args, []), true).toBe(false);
+    });
+  });
+
+  describe('deepEqual:strict - arguments', function () {
+    it('comparing same type objects', function () {
+      var args1 = (function () {
+          return arguments;
+        }(1, 2, 3)),
+        args2 = (function () {
+          return arguments;
+        }(1, 2, 3)),
+        args3 = (function () {
+          return arguments;
+        }(1, 3, 4));
+      expect(deepEqual(args1, args1)).toBe(true);
+      expect(deepEqual(args1, args2)).toBe(true);
+      expect(deepEqual(args1, args3)).toBe(false);
     });
   });
 
