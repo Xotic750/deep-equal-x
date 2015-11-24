@@ -1,7 +1,5 @@
 <a name="module_deep-equal-x"></a>
 ## deep-equal-x
-[deep-equal-x](https://github.com/Xotic750/deep-equal-x)
-node's deepEqual algorithm.
 [![Build Status]
 (https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)]
 (https://travis-ci.org/Xotic750/deep-equal-x)
@@ -12,6 +10,7 @@ node's deepEqual algorithm.
 (https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies)
 [![npm version](https://badge.fury.io/js/deep-equal-x.svg)]
 (https://badge.fury.io/js/deep-equal-x)
+node's deepEqual algorithm.
 
 **Version**: 1.0.3  
 **Author:** Xotic750 <Xotic750@gmail.com>  
