@@ -6,7 +6,7 @@
   es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
   maxstatements:29, maxcomplexity:3 */
 
-/*global expect, module, require, describe, it, returnExports, JSON:true */
+/*global expect, module, require, describe, it, returnExports*/
 
 (function () {
   'use strict';
@@ -15,11 +15,6 @@
 
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
-    if (typeof JSON === 'undefined') {
-      JSON = {};
-    }
-    require('json3').runInContext(null, JSON);
-    require('es6-shim');
     deepEqual = require('../../index.js');
   } else {
     deepEqual = returnExports;

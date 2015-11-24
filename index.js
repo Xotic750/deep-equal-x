@@ -85,7 +85,7 @@
    */
   function filterError(keys) {
     return keys.filter(function (key) {
-      return hasErrorEnumerables.indexOf(key) > -1;
+      return hasErrorEnumerables.indexOf(key) < 0;
     });
   }
 
