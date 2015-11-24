@@ -1,5 +1,5 @@
 /**
- * @file {@link http://xotic750.github.io/deep-equal-x deep-equal-x}
+ * @file {@link https://github.com/Xotic750/deep-equal-x deep-equal-x}
  * node's deepEqual algorithm.
  * [![Build Status]
  * (https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)]
