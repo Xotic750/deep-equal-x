@@ -2,20 +2,17 @@
 ## deep-equal-x
 [deep-equal-x](http://xotic750.github.io/deep-equal-x/)
 node's deepEqual algorithm.
-
-**See**
-
-- https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master
-- https://david-dm.org/Xotic750/deep-equal-x.svg
-- https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg
-- https://badge.fury.io/js/deep-equal-x.svg
+[https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master](https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)
+[https://david-dm.org/Xotic750/deep-equal-x.svg](https://david-dm.org/Xotic750/deep-equal-x.svg)
+[https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg](https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg)
+[https://badge.fury.io/js/deep-equal-x.svg](https://badge.fury.io/js/deep-equal-x.svg)
 
 **Version**: 1.0.3  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
 <a name="exp_module_deep-equal-x--module.exports"></a>
-### module.exports(actual, expected, [strict]) ⇒ <code>boolean</code> ⏏
+### `module.exports(actual, expected, [strict])` ⇒ <code>boolean</code> ⏏
 Tests for deep equality. Primitive values are compared with the equal
 comparison operator ( == ). This only considers enumerable properties.
 It does not test object prototypes, attached symbols, or non-enumerable
@@ -27,13 +24,6 @@ equal comparison operator ( === ).
 **Returns**: <code>boolean</code> - `true` if `actual` and `expected` are deemed equal,
  otherwise `false`.  
 **See**: https://nodejs.org/api/assert.html  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| actual | <code>\*</code> | First comparison object. |
-| expected | <code>\*</code> | Second comparison object. |
-| [strict] | <code>boolean</code> | Comparison mode. |
-
 **Example**  
 ```js
 deepEqual(Error('a'), Error('b'));
