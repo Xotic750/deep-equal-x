@@ -1,16 +1,28 @@
 /**
  * @file
- * [![Build Status]
- * (https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)]
- * (https://travis-ci.org/Xotic750/deep-equal-x)
- * [![Dependency Status](https://david-dm.org/Xotic750/deep-equal-x.svg)]
- * (https://david-dm.org/Xotic750/deep-equal-x)
- * [![devDependency Status]
- * (https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg)]
- * (https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies)
- * [![npm version](https://badge.fury.io/js/deep-equal-x.svg)]
- * (https://badge.fury.io/js/deep-equal-x)
+ *
+ * <a href="https://travis-ci.org/Xotic750/deep-equal-x">
+ * <img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
+ * title="Travis status" alt="Travis status" height="18">
+ * </a>
+ *
+ * <a href="https://david-dm.org/Xotic750/deep-equal-x">
+ * <img src="https://david-dm.org/Xotic750/deep-equal-x.svg"
+ * title="Dependency status" alt="Dependency status" height="18"/>
+ * </a>
+ *
+ * <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies">
+ * <img src="https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg"
+ * title="devDependency status" alt="devDependency status" height="18"/>
+ * </a>
+ *
+ * <a href="https://badge.fury.io/js/deep-equal-x">
+ * <img src="https://badge.fury.io/js/deep-equal-x.svg"
+ * title="npm version" alt="npm version" height="18">
+ * </a>
+ *
  * <br/>
+ *
  * node's deepEqual algorithm.
  * @version 1.0.4
  * @author Xotic750 <Xotic750@gmail.com>
@@ -25,7 +37,7 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:false, plusplus:true, maxparams:3, maxdepth:3,
-  maxstatements:39, maxcomplexity:20 */
+  maxstatements:44, maxcomplexity:23 */
 
 /*global require, module */
 
