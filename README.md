@@ -4,27 +4,22 @@
 <img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
 title="Travis status" alt="Travis status" height="18">
 </a>
-
 <a href="https://david-dm.org/Xotic750/deep-equal-x">
 <img src="https://david-dm.org/Xotic750/deep-equal-x.svg"
 title="Dependency status" alt="Dependency status" height="18"/>
 </a>
-
 <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies">
 <img src="https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg"
 title="devDependency status" alt="devDependency status" height="18"/>
 </a>
-
 <a href="https://badge.fury.io/js/deep-equal-x">
 <img src="https://badge.fury.io/js/deep-equal-x.svg"
 title="npm version" alt="npm version" height="18">
 </a>
 
-<br/>
-
 node's deepEqual algorithm.
 
-**Version**: 1.0.4  
+**Version**: 1.0.5  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
