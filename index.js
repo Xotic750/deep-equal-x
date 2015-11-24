@@ -12,7 +12,7 @@
  * (https://badge.fury.io/js/deep-equal-x)
  * <br/>
  * node's deepEqual algorithm.
- * @version 1.0.3
+ * @version 1.0.4
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
