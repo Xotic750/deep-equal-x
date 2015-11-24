@@ -178,7 +178,7 @@
     kb.sort();
     if (hasBoxedStringBug) {
       aIsString = isString(actual);
-      aIsString = isString(expected);
+      bIsString = isString(expected);
     }
     //~~~cheap key test
     //equivalent values for every corresponding key, and
