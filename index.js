@@ -1,24 +1,27 @@
 /**
  * @file
- * <a href="https://travis-ci.org/Xotic750/deep-equal-x">
+ * <a href="https://travis-ci.org/Xotic750/deep-equal-x"
+ * title="Travis status">
  * <img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
- * title="Travis status" alt="Travis status" height="18">
+ * alt="Travis status" height="18">
  * </a>
- * <a href="https://david-dm.org/Xotic750/deep-equal-x">
+ * <a href="https://david-dm.org/Xotic750/deep-equal-x"
+ * title="Dependency status">
  * <img src="https://david-dm.org/Xotic750/deep-equal-x.svg"
- * title="Dependency status" alt="Dependency status" height="18"/>
+ * alt="Dependency status" height="18"/>
  * </a>
- * <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies">
+ * <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies"
+ * title="devDependency status">
  * <img src="https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg"
- * title="devDependency status" alt="devDependency status" height="18"/>
+ * alt="devDependency status" height="18"/>
  * </a>
- * <a href="https://badge.fury.io/js/deep-equal-x">
+ * <a href="https://badge.fury.io/js/deep-equal-x" title="npm version">
  * <img src="https://badge.fury.io/js/deep-equal-x.svg"
- * title="npm version" alt="npm version" height="18">
+ * alt="npm version" height="18">
  * </a>
  *
  * node's deepEqual algorithm.
- * @version 1.0.5
+ * @version 1.0.6
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
