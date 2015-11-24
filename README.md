@@ -10,6 +10,7 @@
 (https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies)
 [![npm version](https://badge.fury.io/js/deep-equal-x.svg)]
 (https://badge.fury.io/js/deep-equal-x)
+<br/>
 node's deepEqual algorithm.
 
 **Version**: 1.0.3  
