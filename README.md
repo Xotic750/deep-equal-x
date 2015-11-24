@@ -1,11 +1,17 @@
 <a name="module_deep-equal-x"></a>
 ## deep-equal-x
-[deep-equal-x](http://xotic750.github.io/deep-equal-x/)
+[deep-equal-x](http://xotic750.github.io/deep-equal-x)
 node's deepEqual algorithm.
-[https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master](https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)
-[https://david-dm.org/Xotic750/deep-equal-x.svg](https://david-dm.org/Xotic750/deep-equal-x.svg)
-[https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg](https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg)
-[https://badge.fury.io/js/deep-equal-x.svg](https://badge.fury.io/js/deep-equal-x.svg)
+[![Build Status]
+(https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)]
+(https://travis-ci.org/Xotic750/deep-equal-x)
+[![Dependency Status](https://david-dm.org/Xotic750/deep-equal-x.svg)]
+(https://david-dm.org/Xotic750/deep-equal-x)
+[![devDependency Status]
+(https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg)]
+(https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies)
+[![npm version](https://badge.fury.io/js/deep-equal-x.svg)]
+(https://badge.fury.io/js/deep-equal-x)
 
 **Version**: 1.0.3  
 **Author:** Xotic750 <Xotic750@gmail.com>  

@@ -1,10 +1,16 @@
 /**
- * @file {@link http://xotic750.github.io/deep-equal-x/ deep-equal-x}
+ * @file {@link http://xotic750.github.io/deep-equal-x deep-equal-x}
  * node's deepEqual algorithm.
- * {@link https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master}
- * {@link https://david-dm.org/Xotic750/deep-equal-x.svg}
- * {@link https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg}
- * {@link https://badge.fury.io/js/deep-equal-x.svg}
+ * [![Build Status]
+ * (https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master)]
+ * (https://travis-ci.org/Xotic750/deep-equal-x)
+ * [![Dependency Status](https://david-dm.org/Xotic750/deep-equal-x.svg)]
+ * (https://david-dm.org/Xotic750/deep-equal-x)
+ * [![devDependency Status]
+ * (https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg)]
+ * (https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies)
+ * [![npm version](https://badge.fury.io/js/deep-equal-x.svg)]
+ * (https://badge.fury.io/js/deep-equal-x)
  * @version 1.0.3
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
