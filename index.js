@@ -25,11 +25,11 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:false, plusplus:true, maxparams:3, maxdepth:3,
-  maxstatements:46, maxcomplexity:23 */
+  maxstatements:39, maxcomplexity:20 */
 
 /*global require, module */
 
-(function () {
+;(function () {
   'use strict';
 
   var isRegExp = require('is-regex'),
@@ -37,7 +37,30 @@
     isArguments = require('is-arguments'),
     isPrimitive = require('is-primitive'),
     isObject = require('is-object'),
-    isBuffer = require('is-buffer');
+    isBuffer = require('is-buffer'),
+    isString = require('is-string'),
+    pSlice = Array.prototype.slice,
+    // Check failure of by-index access of string characters (IE < 9)
+    // and failure of `0 in boxedString` (Rhino)
+    boxedString = Object('a'),
+    hasBoxedStringBug = boxedString[0] !== 'a' || !(0 in boxedString),
+    // Used to detect unsigned integer values.
+    reIsUint = /^(?:0|[1-9]\d*)$/;
+
+  /**
+   * Checks if `value` is a valid string index.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
+   */
+  function isIndex(value) {
+    var num = -1;
+    if (typeof value === 'number' || reIsUint.test(value)) {
+      num = Number(value);
+    }
+    return value > -1 && value % 1 === 0 && value < 4294967295;
+  }
 
   /**
    * Tests for deep equality. Primitive values are compared with the equal
@@ -73,7 +96,7 @@
    * // => false
    */
   module.exports = function deepEqual(actual, expected, strict) {
-    var length, i, aIsArgs,bIsArgs, ka, kb, key;
+    var length, i, ka, kb, aIsString, bIsString;
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
       return true;
@@ -98,8 +121,8 @@
     }
 
     // 7.3 If the expected value is a RegExp object, the actual value is
-    // equivalent if it is also a RegExp object with the same source and
-    // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
+    // equivalent if it is also a RegExp object with the same `source` and
+    // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
     if (isRegExp(actual) && isRegExp(expected)) {
       return actual.source === expected.source &&
              actual.global === expected.global &&
@@ -110,7 +133,7 @@
     }
 
     // 7.4. Other pairs that do not both pass typeof value == 'object',
-    // equivalence is determined by ==.
+    // equivalence is determined by == or strict ===.
     if (!isObject(actual) && !isObject(expected)) {
       /*jshint eqeqeq:false */
       return strict === true ? actual === expected : actual == expected;
@@ -134,15 +157,13 @@
     if (isPrimitive(actual) || isPrimitive(expected)) {
       return actual === expected;
     }
-    aIsArgs = isArguments(actual);
-    bIsArgs = isArguments(expected);
-    if (aIsArgs && !bIsArgs || !aIsArgs && bIsArgs) {
+    ka = isArguments(actual);
+    kb = isArguments(expected);
+    if (ka && !kb || !ka && kb) {
       return false;
     }
-    if (aIsArgs) {
-      actual = Array.prototype.slice.call(actual);
-      expected = Array.prototype.slice.call(expected);
-      return deepEqual(actual, expected);
+    if (ka) {
+      return deepEqual(pSlice.call(actual), pSlice.call(expected));
     }
     ka = Object.keys(actual);
     kb = Object.keys(expected);
@@ -154,20 +175,32 @@
     //the same set of keys (although not necessarily the same order),
     ka.sort();
     kb.sort();
-    //~~~cheap key test
-    for (i = ka.length - 1; i >= 0; i -= 1) {
-      if (ka[i] !== kb[i]) {
-        return false;
-      }
+    if (hasBoxedStringBug) {
+      aIsString = isString(actual);
+      aIsString = isString(expected);
     }
+    //~~~cheap key test
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test
-    for (i = ka.length - 1; i >= 0; i -= 1) {
-      key = ka[i];
-      if (!deepEqual(actual[key], expected[key])) {
-        return false;
+    return !ka.some(function (key, index) {
+      var isIdx, va, vb;
+      if (key !== kb[index]) {
+        return true;
       }
-    }
-    return true;
+      if (aIsString || bIsString) {
+        isIdx = isIndex(key);
+      }
+      if (aIsString && isIdx) {
+        va = actual.charAt(key);
+      } else {
+        va = actual[key];
+      }
+      if (bIsString && isIdx) {
+        vb = expected.charAt(key);
+      } else {
+        vb = expected[key];
+      }
+      return !deepEqual(va, vb);
+    });
   };
 }());

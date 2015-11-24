@@ -111,6 +111,9 @@
       })).toBe(true);
 
       expect(deepEqual(a1, a2)).toBe(true);
+      a1.d = 1;
+      a2.c = 1;
+      expect(deepEqual(a1, a2)).toBe(false);
     });
   });
 
@@ -316,6 +319,9 @@
       }, true)).toBe(true);
 
       expect(deepEqual(a1, a2, true)).toBe(true);
+      a1.d = 1;
+      a2.c = 1;
+      expect(deepEqual(a1, a2)).toBe(false);
     });
   });
 
