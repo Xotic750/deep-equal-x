@@ -21,7 +21,7 @@
  * </a>
  *
  * node's deepEqual algorithm.
- * @version 1.0.7
+ * @version 1.0.8
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -128,6 +128,7 @@
    *  otherwise `false`.
    * @see https://nodejs.org/api/assert.html
    * @example
+   * var deepEqual = require('deep-equal-x');
    *
    * deepEqual(Error('a'), Error('b'));
    * // => true

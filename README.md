@@ -22,7 +22,7 @@ alt="npm version" height="18">
 
 node's deepEqual algorithm.
 
-**Version**: 1.0.7  
+**Version**: 1.0.8  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
@@ -39,8 +39,17 @@ equal comparison operator ( === ).
 **Returns**: <code>boolean</code> - `true` if `actual` and `expected` are deemed equal,
  otherwise `false`.  
 **See**: https://nodejs.org/api/assert.html  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| actual | <code>\*</code> | First comparison object. |
+| expected | <code>\*</code> | Second comparison object. |
+| [strict] | <code>boolean</code> | Comparison mode. |
+
 **Example**  
 ```js
+var deepEqual = require('deep-equal-x');
+
 deepEqual(Error('a'), Error('b'));
 // => true
 // This does not return `false` because the properties on the  Error object
