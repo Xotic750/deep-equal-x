@@ -44,7 +44,7 @@ equal comparison operator ( === ).
 | --- | --- | --- |
 | actual | <code>\*</code> | First comparison object. |
 | expected | <code>\*</code> | Second comparison object. |
-| [strict] | <code>boolean</code> | Comparison mode. |
+| [strict] | <code>boolean</code> | Comparison mode. If set to `true` use `===`. |
 
 **Example**  
 ```js

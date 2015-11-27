@@ -123,7 +123,7 @@
    *
    * @param {*} actual First comparison object.
    * @param {*} expected Second comparison object.
-   * @param {boolean} [strict] Comparison mode.
+   * @param {boolean} [strict] Comparison mode. If set to `true` use `===`.
    * @return {boolean} `true` if `actual` and `expected` are deemed equal,
    *  otherwise `false`.
    * @see https://nodejs.org/api/assert.html
