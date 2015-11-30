@@ -286,9 +286,8 @@
       if (!isPrim) {
         if (stack.has(item)) {
           throw new RangeError('Circular reference');
-        } else {
-          stack.add(item);
         }
+        stack.add(item);
       }
       result = !baseDeepEqual(
         item,
