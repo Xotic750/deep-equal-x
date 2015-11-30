@@ -251,10 +251,10 @@
       if (hasErrorEnumerables.length && actual instanceof ERROR) {
         ka = filterError(ka);
       }
-      if (hasMapEnumerables && actual instanceof MAP) {
+      if (hasMapEnumerables && hasMapEnumerables.length && actual instanceof MAP) {
         ka = filterMap(ka);
       }
-      if (hasSetEnumerables && actual instanceof SET) {
+      if (hasSetEnumerables && hasSetEnumerables.length && actual instanceof SET) {
         ka = filterSet(ka);
       }
     }
