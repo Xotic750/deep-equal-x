@@ -22,7 +22,8 @@
  *
  * node's deepEqual algorithm. This only considers enumerable properties.
  * It does not test object prototypes, attached symbols,
- * or non-enumerable properties.
+ * or non-enumerable properties. Will work in ES3 environments if you load
+ * es5-shim, which is recommended for all environments to fix native issues.
  * @version 1.0.9
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
@@ -36,7 +37,7 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:false, plusplus:true, maxparams:4, maxdepth:3,
-  maxstatements:50, maxcomplexity:26 */
+  maxstatements:50, maxcomplexity:27 */
 
 /*global require, module */
 
@@ -50,6 +51,7 @@
     isObject = require('is-object'),
     isBuffer = require('is-buffer'),
     isString = require('is-string'),
+    StackSet = require('collections-x').Set,
     pSlice = Array.prototype.slice,
     some = Array.prototype.some,
     // Check failure of by-index access of string characters (IE < 9)
@@ -61,9 +63,9 @@
     ERROR = Error,
     MAP = typeof Map !== 'undefined' && Map,
     SET = typeof Set !== 'undefined' && Set,
-    hasErrorEnumerables,
     hasMapEnumerables = MAP ? Object.keys(new MAP()) : MAP,
-    hasSetEnumerables = SET ? Object.keys(new SET()) : SET;
+    hasSetEnumerables = SET ? Object.keys(new SET()) : SET,
+    hasErrorEnumerables, baseDeepEqual;
 
   try {
     throw new ERROR('a');
@@ -153,34 +155,16 @@
    * `strict` is `true` then Primitive values are compared with the strict
    * equal comparison operator ( === ).
    *
+   * @private
    * @param {*} actual First comparison object.
    * @param {*} expected Second comparison object.
    * @param {boolean} [strict] Comparison mode. If set to `true` use `===`.
+   * @param {Object} previousStack The circular stack.
    * @return {boolean} `true` if `actual` and `expected` are deemed equal,
    *  otherwise `false`.
-   * @see https://nodejs.org/api/assert.html
-   * @example
-   * var deepEqual = require('deep-equal-x');
-   *
-   * deepEqual(Error('a'), Error('b'));
-   * // => true
-   * // This does not return `false` because the properties on the  Error object
-   * // are non-enumerable:
-   *
-   * deepEqual(4, '4');
-   * // => true
-   *
-   * deepEqual({ a: 4, b: '1' }, {  b: '1', a: 4 });
-   * // => true
-   *
-   * deepEqual(new Date(), new Date(2000, 3, 14));
-   * // => false
-   *
-   * deepEqual(4, '4', true);
-   * // => false
    */
-  module.exports = function deepEqual(actual, expected, strict) {
-    var ka, kb, aIsString, bIsString;
+  baseDeepEqual = function de(actual, expected, strict, previousStack) {
+    var stack, ka, kb, aIsString, bIsString;
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
       return true;
@@ -243,7 +227,7 @@
       return false;
     }
     if (ka) {
-      return deepEqual(pSlice.call(actual), pSlice.call(expected));
+      return baseDeepEqual(pSlice.call(actual), pSlice.call(expected), strict, stack);
     }
     ka = Object.keys(actual);
     kb = Object.keys(expected);{
@@ -251,10 +235,12 @@
       if (hasErrorEnumerables.length && actual instanceof ERROR) {
         ka = filterError(ka);
       }
-      if (hasMapEnumerables && hasMapEnumerables.length && actual instanceof MAP) {
+      if (hasMapEnumerables &&
+          hasMapEnumerables.length && actual instanceof MAP) {
         ka = filterMap(ka);
       }
-      if (hasSetEnumerables && hasSetEnumerables.length && actual instanceof SET) {
+      if (hasSetEnumerables &&
+          hasSetEnumerables.length && actual instanceof SET) {
         ka = filterSet(ka);
       }
     }
@@ -287,17 +273,65 @@
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test
     return !ka.some(function (key, index) {
-      var isIdx;
+      var isIdx, result;
       if (key !== kb[index]) {
         return true;
       }
       if (aIsString || bIsString) {
         isIdx = isIndex(key);
       }
-      return !deepEqual(
+      stack = previousStack ? previousStack : new StackSet();
+      if (stack.has(actual)) {
+        throw new RangeError('Circular reference');
+      } else {
+        stack.add(actual);
+      }
+      result = !baseDeepEqual(
         getItem(actual, key, aIsString, isIdx),
-        getItem(expected, key, bIsString, isIdx)
+        getItem(expected, key, bIsString, isIdx),
+        strict,
+        stack
       );
+      stack.delete(actual);
+      return result;
     });
+  };
+
+  /**
+   * Tests for deep equality. Primitive values are compared with the equal
+   * comparison operator ( == ). This only considers enumerable properties.
+   * It does not test object prototypes, attached symbols, or non-enumerable
+   * properties. This can lead to some potentially surprising results. If
+   * `strict` is `true` then Primitive values are compared with the strict
+   * equal comparison operator ( === ).
+   *
+   * @param {*} actual First comparison object.
+   * @param {*} expected Second comparison object.
+   * @param {boolean} [strict] Comparison mode. If set to `true` use `===`.
+   * @return {boolean} `true` if `actual` and `expected` are deemed equal,
+   *  otherwise `false`.
+   * @see https://nodejs.org/api/assert.html
+   * @example
+   * var deepEqual = require('deep-equal-x');
+   *
+   * deepEqual(Error('a'), Error('b'));
+   * // => true
+   * // This does not return `false` because the properties on the  Error object
+   * // are non-enumerable:
+   *
+   * deepEqual(4, '4');
+   * // => true
+   *
+   * deepEqual({ a: 4, b: '1' }, {  b: '1', a: 4 });
+   * // => true
+   *
+   * deepEqual(new Date(), new Date(2000, 3, 14));
+   * // => false
+   *
+   * deepEqual(4, '4', true);
+   * // => false
+   */
+  module.exports = function deepEqual(actual, expected, strict) {
+    return baseDeepEqual(actual, expected, strict);
   };
 }());

@@ -4,9 +4,9 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
-  maxstatements:35, maxcomplexity:7 */
+  maxstatements:37, maxcomplexity:7 */
 
-/*global expect, module, require, describe, it, xit, returnExports*/
+/*global expect, module, require, jasmine, describe, it, xit, returnExports*/
 
 (function () {
   'use strict';
@@ -245,10 +245,42 @@
     });
   });
 
+  describe('deepEqual - non circular refs', function () {
+    it('make sure stack works', function () {
+      var b = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
+        c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+      expect(deepEqual(b, c)).toBe(true);
+    });
+  });
+
   describe('deepEqual - circular refs', function () {
     it('make sure it doesn\'t loop forever', function () {
-      var b = {},
-        c = {},
+      var b = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
+        c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
         gotError = false;
 
       b.b = b;
@@ -258,6 +290,8 @@
         deepEqual(b, c);
       } catch (e) {
         gotError = true;
+        expect(e).toEqual(jasmine.any(RangeError));
+        expect(e.message).toBe('Circular reference');
       }
 
       expect(gotError).toBe(true);
@@ -365,6 +399,12 @@
       }, true)).toBe(true);
 
       expect(deepEqual({
+        a: 4
+      }, {
+        a: '4'
+      }, true)).toBe(false);
+
+      expect(deepEqual({
         a: 4,
         b: '2'
       }, {
@@ -372,7 +412,7 @@
         b: '2'
       }, true)).toBe(true);
 
-      expect(deepEqual([4], ['4'], true)).toBe(true);
+      expect(deepEqual([4], ['4'], true)).toBe(false);
       expect(deepEqual(['a'], {
         0: 'a'
       }, true)).toBe(true);
@@ -473,10 +513,42 @@
     });
   });
 
+  describe('deepEqual:strict - non circular refs', function () {
+    it('make sure stack works', function () {
+      var b = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
+        c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+      expect(deepEqual(b, c, true)).toBe(true);
+    });
+  });
+
   describe('deepEqual:strict - circular refs', function () {
     it('make sure it doesn\'t loop forever', function () {
-      var b = {},
-        c = {},
+      var b = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
+        c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        },
         gotError = false;
 
       b.b = b;
@@ -486,13 +558,15 @@
         deepEqual(b, c, true);
       } catch (e) {
         gotError = true;
+        expect(e).toEqual(jasmine.any(RangeError));
+        expect(e.message).toBe('Circular reference');
       }
 
       expect(gotError).toBe(true);
     });
   });
 
-  describe('deepEqual - Buffer', function () {
+  describe('deepEqual:strict - Buffer', function () {
     ifBufferSupport('comparing two buffers', function () {
       var b1 = new Buffer([1, 2, 3]),
         b2 = new Buffer([1, 2, 3]),

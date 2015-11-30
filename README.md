@@ -22,7 +22,8 @@ alt="npm version" height="18">
 
 node's deepEqual algorithm. This only considers enumerable properties.
 It does not test object prototypes, attached symbols,
-or non-enumerable properties.
+or non-enumerable properties. Will work in ES3 environments if you load
+es5-shim, which is recommended for all environments to fix native issues.
 
 **Version**: 1.0.9  
 **Author:** Xotic750 <Xotic750@gmail.com>  
