@@ -227,7 +227,12 @@
       return false;
     }
     if (ka) {
-      return baseDeepEqual(pSlice.call(actual), pSlice.call(expected), strict, stack);
+      return baseDeepEqual(
+        pSlice.call(actual),
+        pSlice.call(expected),
+        strict,
+        stack
+      );
     }
     ka = Object.keys(actual);
     kb = Object.keys(expected);{
