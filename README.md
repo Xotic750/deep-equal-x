@@ -20,9 +20,11 @@ alt="devDependency status" height="18"/>
 alt="npm version" height="18">
 </a>
 
-node's deepEqual algorithm.
+node's deepEqual algorithm. This only considers enumerable properties.
+It does not test object prototypes, attached symbols,
+or non-enumerable properties.
 
-**Version**: 1.0.8  
+**Version**: 1.0.9  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  

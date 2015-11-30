@@ -1,6 +1,6 @@
 {
     "name": "deep-equal-x",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "node's assert.deep-equal algorithm.",
     "homepage": "https://github.com/Xotic750/deep-equal-x",
     "author": {

@@ -4,7 +4,7 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
-  maxstatements:31, maxcomplexity:4 */
+  maxstatements:35, maxcomplexity:7 */
 
 /*global expect, module, require, describe, it, xit, returnExports*/
 
@@ -15,6 +15,8 @@
     ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit,
     ifSymbolSupport = typeof Symbol === 'function' &&
       typeof Symbol() === 'symbol' ? it : xit,
+    ifMapSupport = typeof Map !== 'undefined' ? it : xit,
+    ifSetSupport = typeof Set !== 'undefined' ? it : xit,
     deepEqual;
 
   if (typeof module === 'object' && module.exports) {
@@ -216,6 +218,30 @@
       expect(deepEqual(b1, b1)).toBe(true);
       expect(deepEqual(b1, b2)).toBe(true);
       expect(deepEqual(b1, b3)).toBe(false);
+    });
+  });
+
+  describe('deepEqual - Map', function () {
+    ifMapSupport('comparing two maps', function () {
+      var m1 = new Map(),
+        m2 = new Map();
+      m1.set(1, 2);
+      m1.set(2, 3);
+      m2.set(1, 2);
+      expect(deepEqual(m1, m1)).toBe(true);
+      expect(deepEqual(m1, m2)).toBe(true);
+    });
+  });
+
+  describe('deepEqual - Set', function () {
+    ifSetSupport('comparing two set', function () {
+      var s1 = new Set(),
+        s2 = new Set();
+      s1.add(1);
+      s1.add(2);
+      s2.add(1);
+      expect(deepEqual(s1, s1)).toBe(true);
+      expect(deepEqual(s1, s2)).toBe(true);
     });
   });
 
@@ -485,6 +511,30 @@
       expect(deepEqual(b1, b1, true)).toBe(true);
       expect(deepEqual(b1, b2, true)).toBe(true);
       expect(deepEqual(b1, b3, true)).toBe(false);
+    });
+  });
+
+  describe('deepEqual:strict - Map', function () {
+    ifMapSupport('comparing two maps', function () {
+      var m1 = new Map(),
+        m2 = new Map();
+      m1.set(1, 2);
+      m1.set(2, 3);
+      m2.set(1, 2);
+      expect(deepEqual(m1, m1, true)).toBe(true);
+      expect(deepEqual(m1, m2, true)).toBe(true);
+    });
+  });
+
+  describe('deepEqual:strict - Set', function () {
+    ifSetSupport('comparing two set', function () {
+      var s1 = new Set(),
+        s2 = new Set();
+      s1.add(1);
+      s1.add(2);
+      s2.add(1);
+      expect(deepEqual(s1, s1, true)).toBe(true);
+      expect(deepEqual(s1, s2, true)).toBe(true);
     });
   });
 
