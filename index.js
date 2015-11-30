@@ -273,26 +273,32 @@
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test
     return !ka.some(function (key, index) {
-      var isIdx, result;
+      var isIdx, isPrim, result, item;
       if (key !== kb[index]) {
         return true;
       }
       if (aIsString || bIsString) {
         isIdx = isIndex(key);
       }
-      stack = previousStack ? previousStack : new StackSet();
-      if (stack.has(actual)) {
-        throw new RangeError('Circular reference');
-      } else {
-        stack.add(actual);
+      stack = previousStack ? previousStack : new StackSet([actual]);
+      item = getItem(actual, key, aIsString, isIdx);
+      isPrim = isPrimitive(item);
+      if (!isPrim) {
+        if (stack.has(item)) {
+          throw new RangeError('Circular reference');
+        } else {
+          stack.add(item);
+        }
       }
       result = !baseDeepEqual(
-        getItem(actual, key, aIsString, isIdx),
+        item,
         getItem(expected, key, bIsString, isIdx),
         strict,
         stack
       );
-      stack.delete(actual);
+      if (!isPrim) {
+        stack.delete(item);
+      }
       return result;
     });
   };
