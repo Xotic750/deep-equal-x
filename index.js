@@ -24,7 +24,7 @@
  * It does not test object prototypes, attached symbols,
  * or non-enumerable properties. Will work in ES3 environments if you load
  * es5-shim, which is recommended for all environments to fix native issues.
- * @version 1.0.10
+ * @version 1.0.11
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
