@@ -1,6 +1,6 @@
 {
     "name": "deep-equal-x",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "node's assert.deep-equal algorithm.",
     "homepage": "https://github.com/Xotic750/deep-equal-x",
     "author": {
@@ -31,15 +31,15 @@
         "url": "https://github.com/Xotic750/deep-equal-x/issues"
     },
     "dependencies": {
-      "is-regex": "^1.0.3",
-      "is-callable": "^1.1.0",
+      "es-abstract": "^1.4.3",
       "is-date-object": "^1.0.1",
       "is-arguments": "^1.0.2",
       "is-primitive": "^2.0.0",
       "is-object": "^1.0.1",
       "is-buffer": "^1.1.0",
       "is-string": "^1.0.4",
-      "collections-x": "^1.0.0"
+      "index-of-x": "^1.0.4",
+      "collections-x": "^1.0.1"
     },
     "devDependencies": {
       "es5-shim": "^4.3.1",

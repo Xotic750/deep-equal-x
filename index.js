@@ -24,7 +24,7 @@
  * It does not test object prototypes, attached symbols,
  * or non-enumerable properties. Will work in ES3 environments if you load
  * es5-shim, which is recommended for all environments to fix native issues.
- * @version 1.0.9
+ * @version 1.0.10
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -44,16 +44,24 @@
 ;(function () {
   'use strict';
 
-  var isRegExp = require('is-regex'),
+  var ES = require('es-abstract'),
     isDate = require('is-date-object'),
     isArguments = require('is-arguments'),
     isPrimitive = require('is-primitive'),
     isObject = require('is-object'),
     isBuffer = require('is-buffer'),
     isString = require('is-string'),
+    indexOf = require('index-of-x'),
     StackSet = require('collections-x').Set,
     pSlice = Array.prototype.slice,
-    some = Array.prototype.some,
+    pSome = Array.prototype.some,
+    pFilter = Array.prototype.filter,
+    pSort = Array.prototype.sort,
+    pTest = RegExp.prototype.test,
+    pCharAt = String.prototype.charAt,
+    pGetTime = Date.prototype.getTime,
+    $keys = Object.keys,
+    $Number = Number,
     // Check failure of by-index access of string characters (IE < 9)
     // and failure of `0 in boxedString` (Rhino)
     boxedString = Object('a'),
@@ -63,14 +71,14 @@
     ERROR = Error,
     MAP = typeof Map !== 'undefined' && Map,
     SET = typeof Set !== 'undefined' && Set,
-    hasMapEnumerables = MAP ? Object.keys(new MAP()) : MAP,
-    hasSetEnumerables = SET ? Object.keys(new SET()) : SET,
+    hasMapEnumerables = MAP ? $keys(new MAP()) : MAP,
+    hasSetEnumerables = SET ? $keys(new SET()) : SET,
     hasErrorEnumerables, baseDeepEqual;
 
   try {
     throw new ERROR('a');
   } catch (e) {
-    hasErrorEnumerables = Object.keys(e);
+    hasErrorEnumerables = $keys(e);
   }
 
   /**
@@ -83,8 +91,8 @@
    */
   function isIndex(value) {
     var num = -1;
-    if (reIsUint.test(value)) {
-      num = Number(value);
+    if (ES.Call(pTest, reIsUint, [value])) {
+      num = $Number(value);
     }
     return num > -1 && num % 1 === 0 && num < 4294967295;
   }
@@ -102,7 +110,7 @@
    */
   function getItem(object, key, isStr, isIdx) {
     if (isStr && isIdx) {
-      return object.charAt(key);
+      return ES.Call(pCharAt, object, [key]);
     }
     return object[key];
   }
@@ -116,9 +124,9 @@
    * @returns {Array} Returns the filtered keys.
    */
   function filterError(keys) {
-    return keys.filter(function (key) {
-      return hasErrorEnumerables.indexOf(key) < 0;
-    });
+    return ES.Call(pFilter, keys, [function (key) {
+      return indexOf(hasErrorEnumerables, key) < 0;
+    }]);
   }
 
   /**
@@ -129,9 +137,9 @@
    * @returns {Array} Returns the filtered keys.
    */
   function filterMap(keys) {
-    return keys.filter(function (key) {
-      return hasMapEnumerables.indexOf(key) < 0;
-    });
+    return ES.Call(pFilter, keys, [function (key) {
+      return indexOf(hasMapEnumerables, key) < 0;
+    }]);
   }
 
   /**
@@ -142,9 +150,9 @@
    * @returns {Array} Returns the filtered keys.
    */
   function filterSet(keys) {
-    return keys.filter(function (key) {
-      return hasSetEnumerables.indexOf(key) < 0;
-    });
+    return ES.Call(pFilter, keys, [function (key) {
+      return indexOf(hasSetEnumerables, key) < 0;
+    }]);
   }
 
   /**
@@ -173,21 +181,21 @@
       if (actual.length !== expected.length) {
         return false;
       }
-      return !some.call(actual, function (item, index) {
+      return !ES.Call(pSome, actual, [function (item, index) {
         return item !== expected[index];
-      });
+      }]);
     }
 
     // 7.2. If the expected value is a Date object, the actual value is
     // equivalent if it is also a Date object that refers to the same time.
     if (isDate(actual) && isDate(expected)) {
-      return actual.getTime() === expected.getTime();
+      return ES.Call(pGetTime, actual) === ES.Call(pGetTime, expected);
     }
 
     // 7.3 If the expected value is a RegExp object, the actual value is
     // equivalent if it is also a RegExp object with the same `source` and
     // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
-    if (isRegExp(actual) && isRegExp(expected)) {
+    if (ES.IsRegExp(actual) && ES.IsRegExp(expected)) {
       return actual.source === expected.source &&
              actual.global === expected.global &&
              actual.multiline === expected.multiline &&
@@ -228,14 +236,14 @@
     }
     if (ka) {
       return baseDeepEqual(
-        pSlice.call(actual),
-        pSlice.call(expected),
+        ES.Call(pSlice, actual),
+        ES.Call(pSlice, expected),
         strict,
         stack
       );
     }
-    ka = Object.keys(actual);
-    kb = Object.keys(expected);{
+    ka = $keys(actual);
+    kb = $keys(expected);{
     if (isObject(actual)) {
       if (hasErrorEnumerables.length && actual instanceof ERROR) {
         ka = filterError(ka);
@@ -268,8 +276,8 @@
       return false;
     }
     //the same set of keys (although not necessarily the same order),
-    ka.sort();
-    kb.sort();
+    ES.Call(pSort, ka);
+    ES.Call(pSort, kb);
     if (hasBoxedStringBug) {
       aIsString = isString(actual);
       bIsString = isString(expected);
@@ -277,7 +285,7 @@
     //~~~cheap key test
     //equivalent values for every corresponding key, and
     //~~~possibly expensive deep test
-    return !ka.some(function (key, index) {
+    return !ES.Call(pSome, ka, [function (key, index) {
       var isIdx, isPrim, result, item;
       if (key !== kb[index]) {
         return true;
@@ -304,7 +312,7 @@
         stack.delete(item);
       }
       return result;
-    });
+    }]);
   };
 
   /**
