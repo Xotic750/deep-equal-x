@@ -23,7 +23,7 @@
  * node's deepEqual and deepStrictEqual algorithm. Will work in ES3 environments
  * if you load es5-shim, which is recommended for all environments to fix native
  * issues.
- * @version 1.1.1
+ * @version 1.2.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}

@@ -1,6 +1,6 @@
 {
   "name": "deep-equal-x",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "homepage": "https://github.com/Xotic750/deep-equal-x",
   "author": {
