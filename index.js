@@ -61,7 +61,7 @@
     pGetTime = Date.prototype.getTime,
     $keys = Object.keys,
     $Number = Number,
-    $getPrototypeOf = Object.getPrototypeOf,
+    nativeGetPrototypeOf = Object.getPrototypeOf,
     // Check failure of by-index access of string characters (IE < 9)
     // and failure of `0 in boxedString` (Rhino)
     boxedString = Object('a'),
@@ -73,7 +73,7 @@
     SET = typeof Set !== 'undefined' && Set,
     hasMapEnumerables = MAP ? $keys(new MAP()) : MAP,
     hasSetEnumerables = SET ? $keys(new SET()) : SET,
-    hasErrorEnumerables, de, prototypeOfObject;
+    hasErrorEnumerables, de, prototypeOfObject, $getPrototypeOf;
 
   try {
     throw new ERROR('a');
@@ -81,20 +81,39 @@
     hasErrorEnumerables = $keys(e);
   }
 
-  // ES5 15.2.3.2
-  // http://es5.github.com/#x15.2.3.2
-  if (!$getPrototypeOf) {
+  if (nativeGetPrototypeOf) {
+    try {
+      nativeGetPrototypeOf(1);
+      $getPrototypeOf = nativeGetPrototypeOf;
+    } catch (ignore) {
+      /**
+       * Return the value of the [[Prototype]] internal property of object.
+       * Based on the ECMA6 spec, which only throws on `undefined` or `null`.
+       *
+       * @private
+       * @param {Object} value The object whose prototype is to be returned.
+       * @return {Null|Object} The prototype of the object.
+       */
+      $getPrototypeOf = function getPrototypeOf(value) {
+        return nativeGetPrototypeOf(ES.ToObject(value));
+      };
+    }
+  } else {
+    // Opera Mini breaks here with infinite loops
     prototypeOfObject = Object.prototype;
-    // https://github.com/es-shims/es5-shim/issues#issue/2
-    // http://ejohn.org/blog/objectgetprototypeof/
-    // recommended by fschaefer on github
-    //
-    // sure, and webreflection says ^_^
-    // ... this will nerever possibly return null
-    // ... Opera Mini breaks here with infinite loops
-    $getPrototypeOf = function getPrototypeOf(object) {
-      /*jshint proto:true */
-      var proto = object.__proto__;
+    /**
+     * Return the value of the [[Prototype]] internal property of object.
+     * Based on the ECMA6 spec, which only throws on `undefined` or `null`.
+     *
+     * @private
+     * @name $getPrototypeOf
+     * @param {Object} value The object whose prototype is to be returned.
+     * @return {Null|Object} The prototype of the object.
+     */
+    $getPrototypeOf = function getPrototypeOf(value) {
+      var object = ES.ToObject(value),
+        /*jshint proto:true */
+        proto = object.__proto__;
       /*jshint proto:false */
       if (proto || proto === null) {
         return proto;
@@ -203,7 +222,7 @@
    * @return {boolean} `true` if `actual` and `expected` are deemed equal,
    *  otherwise `false`.
    */
-   de = function baseDeepEqual(actual, expected, strict, previousStack) {
+  de = function baseDeepEqual(actual, expected, strict, previousStack) {
     var stack, ka, kb, aIsString, bIsString;
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
