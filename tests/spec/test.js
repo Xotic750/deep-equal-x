@@ -163,7 +163,7 @@
       var nb1, nb2;
       nb1 = new NameBuilder1('John', 'Smith');
       nb2 = new NameBuilder2('John', 'Smith');
-      expect(deepEqual(nb1, nb2)).toBe(false);
+      expect(deepEqual(nb1, nb2)).toBe(true);
       expect(deepEqual('a', {})).toBe(false);
 
       NameBuilder2.prototype = NameBuilder1.prototype;
@@ -291,7 +291,7 @@
       } catch (e) {
         gotError = true;
         expect(e).toEqual(jasmine.any(RangeError));
-        expect(e.message).toBe('Circular reference');
+        expect(e.message).toBe('Maximum call stack size exceeded');
       }
 
       expect(gotError).toBe(true);
@@ -477,7 +477,7 @@
       var nb1, nb2;
       nb1 = new NameBuilder1('John', 'Smith');
       nb2 = new NameBuilder2('John', 'Smith');
-      expect(deepEqual(nb1, nb2, true)).toBe(false);
+      expect(deepEqual(nb1, nb2, true)).toBe(true);
       expect(deepEqual('a', {}, true)).toBe(false);
 
       NameBuilder2.prototype = NameBuilder1.prototype;
@@ -559,7 +559,7 @@
       } catch (e) {
         gotError = true;
         expect(e).toEqual(jasmine.any(RangeError));
-        expect(e.message).toBe('Circular reference');
+        expect(e.message).toBe('Maximum call stack size exceeded');
       }
 
       expect(gotError).toBe(true);

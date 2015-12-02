@@ -24,7 +24,7 @@
  * It does not test object prototypes, attached symbols,
  * or non-enumerable properties. Will work in ES3 environments if you load
  * es5-shim, which is recommended for all environments to fix native issues.
- * @version 1.0.11
+ * @version 1.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -37,7 +37,7 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:false, plusplus:true, maxparams:4, maxdepth:3,
-  maxstatements:50, maxcomplexity:27 */
+  maxstatements:51, maxcomplexity:27 */
 
 /*global require, module */
 
@@ -221,10 +221,14 @@
     if (actual == null || expected == null) {
       return false;
     }
-    // an identical 'prototype' property.
+    // This only considers enumerable properties. It does not test object
+    // prototypes, attached symbols, or non-enumerable properties. This can
+    // lead to some potentially surprising results.
+    /*
     if (actual.prototype !== expected.prototype) {
       return false;
     }
+    */
     // if one is actual primitive, the other must be same
     if (isPrimitive(actual) || isPrimitive(expected)) {
       return actual === expected;
@@ -235,6 +239,9 @@
       return false;
     }
     if (ka) {
+      if (ka.length !== kb.length) {
+        return false;
+      }
       return baseDeepEqual(
         ES.Call(pSlice, actual),
         ES.Call(pSlice, expected),
@@ -243,7 +250,12 @@
       );
     }
     ka = $keys(actual);
-    kb = $keys(expected);{
+    kb = $keys(expected);
+    // having the same number of owned properties (keys incorporates
+    // hasOwnProperty)
+    if (ka.length !== kb.length) {
+      return false;
+    }
     if (isObject(actual)) {
       if (hasErrorEnumerables.length && actual instanceof ERROR) {
         ka = filterError(ka);
@@ -257,7 +269,6 @@
         ka = filterSet(ka);
       }
     }
-
     if (isObject(expected)) {
       if (hasErrorEnumerables.length && expected instanceof ERROR) {
         kb = filterError(kb);
@@ -268,12 +279,6 @@
       if (hasSetEnumerables && expected instanceof SET) {
         kb = filterSet(kb);
       }
-    }
-    }
-    // having the same number of owned properties (keys incorporates
-    // hasOwnProperty)
-    if (ka.length !== kb.length) {
-      return false;
     }
     //the same set of keys (although not necessarily the same order),
     ES.Call(pSort, ka);
@@ -298,7 +303,7 @@
       isPrim = isPrimitive(item);
       if (!isPrim) {
         if (stack.has(item)) {
-          throw new RangeError('Circular reference');
+          throw new RangeError('Maximum call stack size exceeded');
         }
         stack.add(item);
       }
