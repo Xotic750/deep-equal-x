@@ -1,7 +1,7 @@
 {
   "name": "deep-equal-x",
-  "version": "1.1.0",
-  "description": "node's assert.deep-equal algorithm.",
+  "version": "1.1.1",
+  "description": "node's deepEqual and deepStrictEqual algorithm.",
   "homepage": "https://github.com/Xotic750/deep-equal-x",
   "author": {
     "name": "Graham Fairweather",
@@ -9,7 +9,8 @@
   },
   "copyright": "Copyright (c) 2015",
   "keywords": [
-    "deep-equal",
+    "deepEqual",
+    "deepStrictEqual",
     "library",
     "javascript",
     "testing",

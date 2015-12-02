@@ -20,12 +20,11 @@ alt="devDependency status" height="18"/>
 alt="npm version" height="18">
 </a>
 
-node's deepEqual algorithm. This only considers enumerable properties.
-It does not test object prototypes, attached symbols,
-or non-enumerable properties. Will work in ES3 environments if you load
-es5-shim, which is recommended for all environments to fix native issues.
+node's deepEqual and deepStrictEqual algorithm. Will work in ES3 environments
+if you load es5-shim, which is recommended for all environments to fix native
+issues.
 
-**Version**: 1.1.0  
+**Version**: 1.1.1  
 **Author:** Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
