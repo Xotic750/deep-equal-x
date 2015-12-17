@@ -4,27 +4,36 @@
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
   es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
-  maxstatements:37, maxcomplexity:7 */
+  maxstatements:37, maxcomplexity:8 */
 
-/*global expect, module, require, jasmine, describe, it, xit, returnExports*/
+/*global JSON:true, expect, module, require, jasmine, describe, it, xit,
+  returnExports*/
 
 (function () {
   'use strict';
 
-  var ifBufferSupport = typeof Buffer === 'function' ? it : xit,
-    ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit,
-    ifSymbolSupport = typeof Symbol === 'function' &&
-    typeof Symbol() === 'symbol' ? it : xit,
-    ifMapSupport = typeof Map !== 'undefined' ? it : xit,
-    ifSetSupport = typeof Set !== 'undefined' ? it : xit,
-    deepEqual;
+  var ifBufferSupport, ifArrayBufferSupport, ifSymbolSupport, ifMapSupport,
+    ifSetSupport, deepEqual;
 
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
+    require('es5-shim/es5-sham');
+    if (typeof JSON === 'undefined') {
+      JSON = {};
+    }
+    require('json3').runInContext(null, JSON);
+    require('es6-shim');
     deepEqual = require('../../index.js');
   } else {
     deepEqual = returnExports;
   }
+
+  ifBufferSupport = typeof Buffer === 'function' ? it : xit;
+  ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit;
+  ifSymbolSupport = typeof Symbol === 'function' &&
+  typeof Symbol() === 'symbol' ? it : xit;
+  ifMapSupport = typeof Map !== 'undefined' ? it : xit;
+  ifSetSupport = typeof Set !== 'undefined' ? it : xit;
 
   describe('deepEqual', function () {
     describe('7.2', function () {

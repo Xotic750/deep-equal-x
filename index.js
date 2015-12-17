@@ -20,10 +20,26 @@
  * alt="npm version" height="18">
  * </a>
  *
- * node's deepEqual and deepStrictEqual algorithm. Will work in ES3 environments
- * if you load es5-shim, which is recommended for all environments to fix native
- * issues.
- * @version 1.2.0
+ * node's deepEqual and deepStrictEqual algorithm.
+ *
+ * <h2>ECMAScript compatibility shims for legacy JavaScript engines</h2>
+ * `es5-shim.js` monkey-patches a JavaScript context to contain all EcmaScript 5
+ * methods that can be faithfully emulated with a legacy JavaScript engine.
+ *
+ * `es5-sham.js` monkey-patches other ES5 methods as closely as possible.
+ * For these methods, as closely as possible to ES5 is not very close.
+ * Many of these shams are intended only to allow code to be written to ES5
+ * without causing run-time errors in older engines. In many cases,
+ * this means that these shams cause many ES5 methods to silently fail.
+ * Decide carefully whether this is what you want. Note: es5-sham.js requires
+ * es5-shim.js to be able to work properly.
+ *
+ * `json3.js` monkey-patches the EcmaScript 5 JSON implimentation faithfully.
+ *
+ * `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
+ * behave as closely as possible to ECMAScript 6 (Harmony).
+ *
+ * @version 1.2.1
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -50,6 +66,10 @@
     isObject = require('is-object'),
     isBuffer = require('is-buffer'),
     isString = require('is-string'),
+    isError = require('is-error-x'),
+    isMap = require('is-map-x'),
+    isSet = require('is-set-x'),
+    isNil = require('is-nil-x'),
     indexOf = require('index-of-x'),
     StackSet = require('collections-x').Set,
     pSlice = Array.prototype.slice,
@@ -60,76 +80,21 @@
     pCharAt = String.prototype.charAt,
     pGetTime = Date.prototype.getTime,
     $keys = Object.keys,
-    $Number = Number,
-    nativeGetPrototypeOf = Object.getPrototypeOf,
+    $getPrototypeOf = Object.getPrototypeOf,
     // Check failure of by-index access of string characters (IE < 9)
     // and failure of `0 in boxedString` (Rhino)
     boxedString = Object('a'),
     hasBoxedStringBug = boxedString[0] !== 'a' || !(0 in boxedString),
     // Used to detect unsigned integer values.
     reIsUint = /^(?:0|[1-9]\d*)$/,
-    ERROR = Error,
-    MAP = typeof Map !== 'undefined' && Map,
-    SET = typeof Set !== 'undefined' && Set,
-    hasMapEnumerables = MAP ? $keys(new MAP()) : MAP,
-    hasSetEnumerables = SET ? $keys(new SET()) : SET,
-    hasErrorEnumerables, de, prototypeOfObject, $getPrototypeOf;
+    hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [],
+    hasSetEnumerables = typeof Set === 'function' ? $keys(new Set()) : [],
+    hasErrorEnumerables, de;
 
   try {
-    throw new ERROR('a');
+    throw new Error('a');
   } catch (e) {
     hasErrorEnumerables = $keys(e);
-  }
-
-  if (nativeGetPrototypeOf) {
-    try {
-      nativeGetPrototypeOf(1);
-      $getPrototypeOf = nativeGetPrototypeOf;
-    } catch (ignore) {
-      /**
-       * Return the value of the [[Prototype]] internal property of object.
-       * Based on the ECMA6 spec, which only throws on `undefined` or `null`.
-       *
-       * @private
-       * @param {Object} value The object whose prototype is to be returned.
-       * @return {Null|Object} The prototype of the object.
-       */
-      $getPrototypeOf = function getPrototypeOf(value) {
-        return nativeGetPrototypeOf(ES.ToObject(value));
-      };
-    }
-  } else {
-    // Opera Mini breaks here with infinite loops
-    prototypeOfObject = Object.prototype;
-    /**
-     * Return the value of the [[Prototype]] internal property of object.
-     * Based on the ECMA6 spec, which only throws on `undefined` or `null`.
-     *
-     * @private
-     * @name $getPrototypeOf
-     * @param {Object} value The object whose prototype is to be returned.
-     * @return {Null|Object} The prototype of the object.
-     */
-    $getPrototypeOf = function getPrototypeOf(value) {
-      var object = ES.ToObject(value),
-        /*jshint proto:true */
-        proto = object.__proto__;
-      /*jshint proto:false */
-      if (proto || proto === null) {
-        return proto;
-      }
-      if (ES.IsCallable(object.constructor)) {
-        return object.constructor.prototype;
-      }
-      if (object instanceof Object) {
-        return prototypeOfObject;
-      }
-      // Correctly return null for Objects created with `Object.create(null)`
-      // (shammed or native) or `{ __proto__: null}`.  Also returns null for
-      // cross-realm objects on browsers that lack `__proto__` support (like
-      // IE <11), but that's the best we can do.
-      return null;
-    };
   }
 
   /**
@@ -143,7 +108,7 @@
   function isIndex(value) {
     var num = -1;
     if (ES.Call(pTest, reIsUint, [value])) {
-      num = $Number(value);
+      num = ES.ToNumber(value);
     }
     return num > -1 && num % 1 === 0 && num < 4294967295;
   }
@@ -172,37 +137,15 @@
    *
    * @private
    * @param {Array} keys The Error object's keys.
+   * @param {Array} unwanted The unwanted keys.
    * @returns {Array} Returns the filtered keys.
    */
-  function filterError(keys) {
+  function filterUnwanted(keys, unwanted) {
+    if (!unwanted.length) {
+      return keys;
+    }
     return ES.Call(pFilter, keys, [function (key) {
-      return indexOf(hasErrorEnumerables, key) < 0;
-    }]);
-  }
-
-  /**
-   * Filter `keys` of unwanted Map enumerables.
-   *
-   * @private
-   * @param {Array} keys The Map object's keys.
-   * @returns {Array} Returns the filtered keys.
-   */
-  function filterMap(keys) {
-    return ES.Call(pFilter, keys, [function (key) {
-      return indexOf(hasMapEnumerables, key) < 0;
-    }]);
-  }
-
-  /**
-   * Filter `keys` of unwanted Set enumerables.
-   *
-   * @private
-   * @param {Array} keys The Set object's keys.
-   * @returns {Array} Returns the filtered keys.
-   */
-  function filterSet(keys) {
-    return ES.Call(pFilter, keys, [function (key) {
-      return indexOf(hasSetEnumerables, key) < 0;
+      return indexOf(unwanted, key) < 0;
     }]);
   }
 
@@ -268,8 +211,7 @@
     // (although not necessarily the same order), equivalent values for every
     // corresponding key, and an identical 'prototype' property. Note: this
     // accounts for both named and indexed properties on Arrays.
-    /*jshint eqnull:true */
-    if (actual == null || expected == null) {
+    if (isNil(actual) || isNil(expected)) {
       return false;
     }
     /*jshint eqnull:false */
@@ -307,27 +249,21 @@
       return false;
     }
     if (isObject(actual)) {
-      if (hasErrorEnumerables.length && actual instanceof ERROR) {
-        ka = filterError(ka);
-      }
-      if (hasMapEnumerables &&
-        hasMapEnumerables.length && actual instanceof MAP) {
-        ka = filterMap(ka);
-      }
-      if (hasSetEnumerables &&
-        hasSetEnumerables.length && actual instanceof SET) {
-        ka = filterSet(ka);
+      if (isError(actual)) {
+        ka = filterUnwanted(ka, hasErrorEnumerables);
+      } else if (isMap(actual)) {
+        ka = filterUnwanted(ka, hasMapEnumerables);
+      } else if (isSet(actual)) {
+        ka = filterUnwanted(ka, hasSetEnumerables);
       }
     }
     if (isObject(expected)) {
-      if (hasErrorEnumerables.length && expected instanceof ERROR) {
-        kb = filterError(kb);
-      }
-      if (hasMapEnumerables && expected instanceof MAP) {
-        kb = filterMap(kb);
-      }
-      if (hasSetEnumerables && expected instanceof SET) {
-        kb = filterSet(kb);
+      if (isError(expected)) {
+        kb = filterUnwanted(kb, hasErrorEnumerables);
+      } else if (isMap(expected)) {
+        kb = filterUnwanted(kb, hasMapEnumerables);
+      } else if (isSet(expected)) {
+        kb = filterUnwanted(kb, hasSetEnumerables);
       }
     }
     //the same set of keys (although not necessarily the same order),
@@ -364,7 +300,7 @@
         stack
       );
       if (!isPrim) {
-        stack.delete(item);
+        stack['delete'](item);
       }
       return result;
     }]);
