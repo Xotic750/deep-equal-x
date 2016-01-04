@@ -40,12 +40,12 @@
     "is-object": "^1.0.1",
     "is-buffer": "^1.1.1",
     "is-string": "^1.0.4",
-    "index-of-x": "^1.0.5",
-    "collections-x": "^1.0.3",
-    "is-error-x": "^1.0.4",
-    "is-map-x": "^1.0.1",
-    "is-set-x": "^1.0.1",
-    "is-nil-x": "^1.0.1"
+    "index-of-x": "^1.0.6",
+    "collections-x": "^1.0.4",
+    "is-error-x": "^1.0.5",
+    "is-map-x": "^1.0.2",
+    "is-set-x": "^1.0.2",
+    "is-nil-x": "^1.0.2"
   },
   "devDependencies": {
     "es5-shim": "^4.4.1",
