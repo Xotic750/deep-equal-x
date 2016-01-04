@@ -42,7 +42,7 @@
     "is-string": "^1.0.4",
     "index-of-x": "^1.0.5",
     "collections-x": "^1.0.3",
-    "is-error-x": "^1.0.4",
+    "is-error-x": "^1.0.5",
     "is-map-x": "^1.0.1",
     "is-set-x": "^1.0.1",
     "is-nil-x": "^1.0.1"
