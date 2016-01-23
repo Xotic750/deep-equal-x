@@ -3,7 +3,7 @@
 /*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:true, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
+  es3:false, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
   maxstatements:37, maxcomplexity:8 */
 
 /*global JSON:true, expect, module, require, jasmine, describe, it, xit,
@@ -309,7 +309,7 @@
         } catch (e) {
           gotError = true;
           expect(e).toEqual(jasmine.any(RangeError));
-          expect(e.message).toBe('Maximum call stack size exceeded');
+          expect(e.message).toBe('Circular object');
         }
 
         expect(gotError).toBe(true);
@@ -587,7 +587,7 @@
         } catch (e) {
           gotError = true;
           expect(e).toEqual(jasmine.any(RangeError));
-          expect(e.message).toBe('Maximum call stack size exceeded');
+          expect(e.message).toBe('Circular object');
         }
 
         expect(gotError).toBe(true);
