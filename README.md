@@ -1,4 +1,5 @@
 <a name="module_deep-equal-x"></a>
+
 ## deep-equal-x
 <a href="https://travis-ci.org/Xotic750/deep-equal-x"
 title="Travis status">
@@ -39,11 +40,12 @@ es5-shim.js to be able to work properly.
 `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
 behave as closely as possible to ECMAScript 6 (Harmony).
 
-**Version**: 1.2.12  
-**Author:** Xotic750 <Xotic750@gmail.com>  
+**Version**: 1.3.0  
+**Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
 <a name="exp_module_deep-equal-x--module.exports"></a>
+
 ### `module.exports(actual, expected, [strict])` ⇒ <code>boolean</code> ⏏
 Tests for deep equality. Primitive values are compared with the equal
 comparison operator ( == ). This only considers enumerable properties.

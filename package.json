@@ -1,13 +1,10 @@
 {
   "name": "deep-equal-x",
-  "version": "1.2.12",
+  "version": "1.3.0",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "homepage": "https://github.com/Xotic750/deep-equal-x",
-  "author": {
-    "name": "Graham Fairweather",
-    "email": "xotic750@gmail.com"
-  },
-  "copyright": "Copyright (c) 2015-2016",
+  "author": "Graham Fairweather <xotic750@gmail.com>",
+  "copyright": "Copyright (c) 2015-2017",
   "keywords": [
     "es6",
     "deepEqual",
@@ -25,42 +22,44 @@
     "node": "*"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Xotic750/deep-equal-x.git"
-  },
+  "repository": "https://github.com/Xotic750/deep-equal-x.git",
   "bugs": {
     "url": "https://github.com/Xotic750/deep-equal-x/issues"
   },
   "dependencies": {
-    "is-date-object": "^1.0.1",
     "is-arguments": "^1.0.2",
-    "is-primitive": "^2.0.0",
+    "is-buffer": "^1.1.5",
+    "is-date-object": "^1.0.1",
+    "is-error-x": "^1.1.0",
+    "is-map-x": "^1.1.0",
+    "is-nil-x": "^1.1.0",
     "is-object": "^1.0.1",
-    "is-buffer": "^1.1.2",
-    "is-string": "^1.0.4",
-    "is-error-x": "^1.0.13",
-    "is-map-x": "^1.0.13",
-    "is-set-x": "^1.0.11",
-    "is-nil-x": "^1.0.10",
-    "is-regex": "^1.0.3"
+    "is-primitive": "^2.0.0",
+    "is-regex": "^1.0.4",
+    "is-set-x": "^1.1.0",
+    "is-string": "^1.0.4"
   },
   "devDependencies": {
-    "es5-shim": "^4.5.4",
-    "es6-shim": "^0.34.4",
+    "@ljharb/eslint-config": "^11.0.0",
+    "es5-shim": "^4.5.9",
+    "es6-shim": "^0.35.3",
+    "es7-shim": "^6.0.0",
+    "eslint": "^3.18.0",
+    "eslint-plugin-import": "^2.2.0",
     "json3": "^3.3.2",
-    "jscs": "^2.9.0",
-    "uglify-js": "^2.6.1",
-    "browserify": "^13.0.0",
+    "jscs": "^3.0.7",
+    "uglify-js": "^2.8.13",
+    "browserify": "^14.1.0",
     "browserify-derequire": "^0.9.4",
     "jasmine-node": "^1.14.5",
-    "jsdoc-to-markdown": "^1.3.3",
-    "nsp": "^2.2.0"
+    "jsdoc-to-markdown": "^3.0.0",
+    "nsp": "^2.6.3"
   },
   "scripts": {
     "test": "jasmine-node --matchall tests/spec/",
     "security": "nsp check",
     "style": "jscs index.js",
+    "eslint": "eslint *.js tests/spec/*.js",
     "docs": "jsdoc2md --name-format --example-lang js index.js > README.md",
     "build": "browserify -p browserify-derequire -e index.js -o lib/deep-equal-x.js -u 'crypto' -s returnExports",
     "build-uglify": "uglifyjs lib/deep-equal-x.js -o lib/deep-equal-x.min.js --compress --keep-fnames --mangle --beautify ascii_only=true,beautify=false --source-map lib/deep-equal-x.map"

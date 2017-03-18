@@ -1,19 +1,22 @@
-/*jslint maxlen:80, es6:true, this:true, white:true */
+/* jslint maxlen:80, es6:true, this:true, white:true */
 
-/*jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
-  freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
-  nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-  es3:false, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
-  maxstatements:37, maxcomplexity:8 */
+/* jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
+   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
+   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
+   es3:false, esnext:true, plusplus:true, maxparams:2, maxdepth:2,
+   maxstatements:37, maxcomplexity:8 */
 
-/*global JSON:true, expect, module, require, jasmine, describe, it, xit,
-  returnExports*/
+/* eslint strict: 1, max-lines: 1, symbol-description: 1, max-nested-callbacks: 1,
+   max-statements: 1 */
 
-(function () {
+/* global JSON:true, expect, module, require, jasmine, describe, it, xit,
+   returnExports, ArrayBuffer, Symbol, Int32Array */
+
+;(function () { // eslint-disable-line no-extra-semi
+
   'use strict';
 
-  var ifBufferSupport, ifArrayBufferSupport, ifSymbolSupport, ifMapSupport,
-    ifSetSupport, deepEqual;
+  var deepEqual;
 
   if (typeof module === 'object' && module.exports) {
     require('es5-shim');
@@ -23,26 +26,33 @@
     }
     require('json3').runInContext(null, JSON);
     require('es6-shim');
+    var es7 = require('es7-shim');
+    Object.keys(es7).forEach(function (key) {
+      var obj = es7[key];
+      if (typeof obj.shim === 'function') {
+        obj.shim();
+      }
+    });
     deepEqual = require('../../index.js');
   } else {
     deepEqual = returnExports;
   }
 
-  ifBufferSupport = typeof Buffer === 'function' ? it : xit;
-  ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit;
-  ifSymbolSupport = typeof Symbol === 'function' &&
-  typeof Symbol() === 'symbol' ? it : xit;
-  ifMapSupport = typeof Map !== 'undefined' ? it : xit;
-  ifSetSupport = typeof Set !== 'undefined' ? it : xit;
+  var ifBufferSupport = typeof Buffer === 'function' ? it : xit;
+  var ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit;
+  var ifSymbolSupport = typeof Symbol === 'function' && typeof Symbol() === 'symbol' ? it : xit;
+  var ifMapSupport = typeof Map === 'undefined' ? xit : it;
+  var ifSetSupport = typeof Set === 'undefined' ? xit : it;
+
+  var returnArgs = function () {
+    return arguments;
+  };
 
   describe('deepEqual', function () {
     describe('7.2', function () {
       it('Dates', function () {
         expect(deepEqual(new Date(), new Date(2000, 3, 14))).toBe(false);
-
-        expect(
-          deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14))
-        ).toBe(true);
+        expect(deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14))).toBe(true);
       });
     });
 
@@ -78,27 +88,21 @@
 
     describe('7.5', function () {
       it('own properties & keys (not necessarily the same order)', function () {
-        var a1 = [1, 2, 3],
-          a2 = [1, 2, 3];
+        var a1 = [1, 2, 3];
+        var a2 = [1, 2, 3];
         a1.a = 'test';
         a1.b = true;
         a2.b = true;
         a2.a = 'test';
 
-        expect(deepEqual({
-          a: 4
-        }, {
+        expect(deepEqual({ a: 4 }, {
           a: 4,
           b: true
         })).toBe(false);
 
         expect(deepEqual(Object.keys(a1), Object.keys(a2))).toBe(false);
 
-        expect(deepEqual({
-          a: 4
-        }, {
-          a: 4
-        })).toBe(true);
+        expect(deepEqual({ a: 4 }, { a: 4 })).toBe(true);
 
         expect(deepEqual({
           a: 4,
@@ -109,16 +113,14 @@
         })).toBe(true);
 
         expect(deepEqual([4], ['4'])).toBe(true);
-        expect(deepEqual(['a'], {
-          0: 'a'
-        })).toBe(true);
+        expect(deepEqual(['a'], { 0: 'a' })).toBe(true);
 
         expect(deepEqual({
           a: 4,
           b: '1'
         }, {
           b: '1',
-          a: 4
+          a: 4 // eslint-disable-line sort-keys
         })).toBe(true);
 
         expect(deepEqual(a1, a2)).toBe(true);
@@ -137,10 +139,10 @@
        * @param {string} first A persons first name.
        * @param {string} last A persons last name.
        */
-      function NameBuilder1(first, last) {
+      var NameBuilder1 = function (first, last) {
         this.first = first;
         this.last = last;
-      }
+      };
 
       NameBuilder1.prototype = {
         /**
@@ -162,17 +164,16 @@
        * @param {string} first A persons first name.
        * @param {string} last A persons last name.
        */
-      function NameBuilder2(first, last) {
+      var NameBuilder2 = function (first, last) {
         this.first = first;
         this.last = last;
-      }
+      };
 
       NameBuilder2.prototype = Object;
 
       it('prototype property comparison', function () {
-        var nb1, nb2;
-        nb1 = new NameBuilder1('John', 'Smith');
-        nb2 = new NameBuilder2('John', 'Smith');
+        var nb1 = new NameBuilder1('John', 'Smith');
+        var nb2 = new NameBuilder2('John', 'Smith');
         expect(deepEqual(nb1, nb2)).toBe(true);
         expect(deepEqual('a', {})).toBe(false);
 
@@ -188,9 +189,7 @@
         expect(deepEqual(null, {})).toBe(false);
         expect(deepEqual(undefined, {})).toBe(false);
         expect(deepEqual('a', ['a'])).toBe(false);
-        expect(deepEqual('a', {
-          0: 'a'
-        })).toBe(false);
+        expect(deepEqual('a', { 0: 'a' })).toBe(false);
         expect(deepEqual(1, {})).toBe(false);
         expect(deepEqual(true, {})).toBe(false);
       });
@@ -198,8 +197,8 @@
 
     describe('ES6 symbols', function () {
       ifSymbolSupport('compared to similar objects', function () {
-        var syma = Symbol('a'),
-          symb = Symbol('b');
+        var syma = Symbol('a');
+        var symb = Symbol('b');
         expect(deepEqual(syma, syma)).toBe(true);
         expect(deepEqual(syma, symb)).toBe(false);
         expect(deepEqual(syma, {})).toBe(false);
@@ -209,9 +208,7 @@
     describe('object wrappers', function () {
       it('when comparing similar objects', function () {
         expect(deepEqual(Object('a'), ['a'])).toBe(true);
-        expect(deepEqual(Object('a'), {
-          0: 'a'
-        })).toBe(true);
+        expect(deepEqual(Object('a'), { 0: 'a' })).toBe(true);
         expect(deepEqual(Object(1), {})).toBe(true);
         expect(deepEqual(Object(true), {})).toBe(true);
       });
@@ -219,9 +216,9 @@
 
     describe('Buffer', function () {
       ifBufferSupport('comparing two buffers', function () {
-        var b1 = new Buffer([1, 2, 3]),
-          b2 = new Buffer([1, 2, 3]),
-          b3 = new Buffer([1, 2]);
+        var b1 = new Buffer([1, 2, 3]);
+        var b2 = new Buffer([1, 2, 3]);
+        var b3 = new Buffer([1, 2]);
         expect(deepEqual(b1, b1)).toBe(true);
         expect(deepEqual(b1, b2)).toBe(true);
         expect(deepEqual(b1, b3)).toBe(false);
@@ -230,9 +227,9 @@
 
     describe('ArrayBuffer', function () {
       ifArrayBufferSupport('comparing two array buffers', function () {
-        var b1 = new Int32Array([1, 2, 3]),
-          b2 = new Int32Array([1, 2, 3]),
-          b3 = new Int32Array([1, 2]);
+        var b1 = new Int32Array([1, 2, 3]);
+        var b2 = new Int32Array([1, 2, 3]);
+        var b3 = new Int32Array([1, 2]);
         expect(deepEqual(b1, b1)).toBe(true);
         expect(deepEqual(b1, b2)).toBe(true);
         expect(deepEqual(b1, b3)).toBe(false);
@@ -241,8 +238,8 @@
 
     describe('Map', function () {
       ifMapSupport('comparing two maps', function () {
-        var m1 = new Map(),
-          m2 = new Map();
+        var m1 = new Map();
+        var m2 = new Map();
         m1.set(1, 2);
         m1.set(2, 3);
         m2.set(1, 2);
@@ -253,8 +250,8 @@
 
     describe('Set', function () {
       ifSetSupport('comparing two set', function () {
-        var s1 = new Set(),
-          s2 = new Set();
+        var s1 = new Set();
+        var s2 = new Set();
         s1.add(1);
         s1.add(2);
         s2.add(1);
@@ -266,19 +263,19 @@
     describe('non circular refs', function () {
       it('make sure stack works', function () {
         var b = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          c = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          };
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
         expect(deepEqual(b, c)).toBe(true);
       });
     });
@@ -286,20 +283,20 @@
     describe('circular refs', function () {
       it('make sure it doesn\'t loop forever', function () {
         var b = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          c = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          gotError = false;
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var gotError = false;
 
         b.b = b;
         c.b = c;
@@ -318,9 +315,7 @@
 
     describe('reflexivity', function () {
       it('`arguments` objects', function () {
-        var args = (function () {
-          return arguments;
-        }());
+        var args = returnArgs();
         expect(deepEqual([], args)).toBe(false);
         expect(deepEqual(args, [])).toBe(false);
       });
@@ -328,15 +323,9 @@
 
     describe('arguments', function () {
       it('comparing same type objects', function () {
-        var args1 = (function () {
-            return arguments;
-          }(1, 2, 3)),
-          args2 = (function () {
-            return arguments;
-          }(1, 2, 3)),
-          args3 = (function () {
-            return arguments;
-          }(1, 3, 4));
+        var args1 = returnArgs(1, 2, 3);
+        var args2 = returnArgs(1, 2, 3);
+        var args3 = returnArgs(1, 3, 4);
         expect(deepEqual(args1, args1)).toBe(true);
         expect(deepEqual(args1, args2)).toBe(true);
         expect(deepEqual(args1, args3)).toBe(false);
@@ -357,10 +346,7 @@
     describe('7.2', function () {
       it('Dates', function () {
         expect(deepEqual(new Date(), new Date(2000, 3, 14), true)).toBe(false);
-
-        expect(
-          deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14), true)
-        ).toBe(true);
+        expect(deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14), true)).toBe(true);
       });
     });
 
@@ -396,33 +382,23 @@
 
     describe('7.5', function () {
       it('own properties & keys (not necessarily the same order)', function () {
-        var a1 = [1, 2, 3],
-          a2 = [1, 2, 3];
+        var a1 = [1, 2, 3];
+        var a2 = [1, 2, 3];
         a1.a = 'test';
         a1.b = true;
         a2.b = true;
         a2.a = 'test';
 
-        expect(deepEqual({
-          a: 4
-        }, {
+        expect(deepEqual({ a: 4 }, {
           a: 4,
           b: true
         }, true)).toBe(false);
 
         expect(deepEqual(Object.keys(a1), Object.keys(a2), true)).toBe(false);
 
-        expect(deepEqual({
-          a: 4
-        }, {
-          a: 4
-        }, true)).toBe(true);
+        expect(deepEqual({ a: 4 }, { a: 4 }, true)).toBe(true);
 
-        expect(deepEqual({
-          a: 4
-        }, {
-          a: '4'
-        }, true)).toBe(false);
+        expect(deepEqual({ a: 4 }, { a: '4' }, true)).toBe(false);
 
         expect(deepEqual({
           a: 4,
@@ -433,16 +409,14 @@
         }, true)).toBe(true);
 
         expect(deepEqual([4], ['4'], true)).toBe(false);
-        expect(deepEqual(['a'], {
-          0: 'a'
-        }, true)).toBe(false);
+        expect(deepEqual(['a'], { 0: 'a' }, true)).toBe(false);
 
         expect(deepEqual({
           a: 4,
           b: '1'
         }, {
           b: '1',
-          a: 4
+          a: 4 // eslint-disable-line sort-keys
         }, true)).toBe(true);
 
         expect(deepEqual(a1, a2, true)).toBe(true);
@@ -461,10 +435,10 @@
        * @param {string} first A persons first name.
        * @param {string} last A persons last name.
        */
-      function NameBuilder1(first, last) {
+      var NameBuilder1 = function (first, last) {
         this.first = first;
         this.last = last;
-      }
+      };
 
       NameBuilder1.prototype = {
         /**
@@ -486,17 +460,16 @@
        * @param {string} first A persons first name.
        * @param {string} last A persons last name.
        */
-      function NameBuilder2(first, last) {
+      var NameBuilder2 = function (first, last) {
         this.first = first;
         this.last = last;
-      }
+      };
 
       NameBuilder2.prototype = Object;
 
       it('prototype property comparison', function () {
-        var nb1, nb2;
-        nb1 = new NameBuilder1('John', 'Smith');
-        nb2 = new NameBuilder2('John', 'Smith');
+        var nb1 = new NameBuilder1('John', 'Smith');
+        var nb2 = new NameBuilder2('John', 'Smith');
         expect(deepEqual(nb1, nb2, true)).toBe(false);
         expect(deepEqual('a', {}, true)).toBe(false);
 
@@ -512,9 +485,7 @@
         expect(deepEqual(null, {}, true)).toBe(false);
         expect(deepEqual(undefined, {}, true)).toBe(false);
         expect(deepEqual('a', ['a'], true)).toBe(false);
-        expect(deepEqual('a', {
-          0: 'a'
-        }, true)).toBe(false);
+        expect(deepEqual('a', { 0: 'a' }, true)).toBe(false);
         expect(deepEqual(1, {}, true)).toBe(false);
         expect(deepEqual(true, {}, true)).toBe(false);
       });
@@ -522,8 +493,8 @@
 
     describe('ES6 symbols', function () {
       ifSymbolSupport('compared to similar objects', function () {
-        var syma = Symbol('a'),
-          symb = Symbol('b');
+        var syma = Symbol('a');
+        var symb = Symbol('b');
         expect(deepEqual(syma, syma, true)).toBe(true);
         expect(deepEqual(syma, symb, true)).toBe(false);
         expect(deepEqual(syma, {}, true)).toBe(false);
@@ -533,9 +504,7 @@
     describe('object wrappers', function () {
       it('when comparing similar objects', function () {
         expect(deepEqual(Object('a'), ['a'], true)).toBe(false);
-        expect(deepEqual(Object('a'), {
-          0: 'a'
-        }, true)).toBe(false);
+        expect(deepEqual(Object('a'), { 0: 'a' }, true)).toBe(false);
         expect(deepEqual(Object(1), {}, true)).toBe(false);
         expect(deepEqual(Object(true), {}, true)).toBe(false);
       });
@@ -544,19 +513,19 @@
     describe('non circular refs', function () {
       it('make sure stack works', function () {
         var b = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          c = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          };
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
         expect(deepEqual(b, c, true)).toBe(true);
       });
     });
@@ -564,20 +533,20 @@
     describe('circular refs', function () {
       it('make sure it doesn\'t loop forever', function () {
         var b = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          c = {
-            s: '',
-            t: true,
-            u: undefined,
-            v: 1,
-            w: null
-          },
-          gotError = false;
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var c = {
+          s: '',
+          t: true,
+          u: undefined,
+          v: 1,
+          w: null
+        };
+        var gotError = false;
 
         b.b = b;
         c.b = c;
@@ -596,9 +565,9 @@
 
     describe('Buffer', function () {
       ifBufferSupport('comparing two buffers', function () {
-        var b1 = new Buffer([1, 2, 3]),
-          b2 = new Buffer([1, 2, 3]),
-          b3 = new Buffer([1, 2]);
+        var b1 = new Buffer([1, 2, 3]);
+        var b2 = new Buffer([1, 2, 3]);
+        var b3 = new Buffer([1, 2]);
         expect(deepEqual(b1, b1, true)).toBe(true);
         expect(deepEqual(b1, b2, true)).toBe(true);
         expect(deepEqual(b1, b3, true)).toBe(false);
@@ -607,9 +576,9 @@
 
     describe('ArrayBuffer', function () {
       ifArrayBufferSupport('comparing two array buffers', function () {
-        var b1 = new Int32Array([1, 2, 3]),
-          b2 = new Int32Array([1, 2, 3]),
-          b3 = new Int32Array([1, 2]);
+        var b1 = new Int32Array([1, 2, 3]);
+        var b2 = new Int32Array([1, 2, 3]);
+        var b3 = new Int32Array([1, 2]);
         expect(deepEqual(b1, b1, true)).toBe(true);
         expect(deepEqual(b1, b2, true)).toBe(true);
         expect(deepEqual(b1, b3, true)).toBe(false);
@@ -618,8 +587,8 @@
 
     describe('Map', function () {
       ifMapSupport('comparing two maps', function () {
-        var m1 = new Map(),
-          m2 = new Map();
+        var m1 = new Map();
+        var m2 = new Map();
         m1.set(1, 2);
         m1.set(2, 3);
         m2.set(1, 2);
@@ -630,8 +599,8 @@
 
     describe('Set', function () {
       ifSetSupport('comparing two set', function () {
-        var s1 = new Set(),
-          s2 = new Set();
+        var s1 = new Set();
+        var s2 = new Set();
         s1.add(1);
         s1.add(2);
         s2.add(1);
@@ -642,9 +611,7 @@
 
     describe('reflexivity', function () {
       it('`arguments` objects', function () {
-        var args = (function () {
-          return arguments;
-        }());
+        var args = returnArgs();
         expect(deepEqual([], args), true).toBe(false);
         expect(deepEqual(args, []), true).toBe(false);
       });
@@ -652,15 +619,9 @@
 
     describe('arguments', function () {
       it('comparing same type objects', function () {
-        var args1 = (function () {
-            return arguments;
-          }(1, 2, 3)),
-          args2 = (function () {
-            return arguments;
-          }(1, 2, 3)),
-          args3 = (function () {
-            return arguments;
-          }(1, 3, 4));
+        var args1 = returnArgs(1, 2, 3);
+        var args2 = returnArgs(1, 2, 3);
+        var args3 = returnArgs(1, 3, 4);
         expect(deepEqual(args1, args1)).toBe(true);
         expect(deepEqual(args1, args2)).toBe(true);
         expect(deepEqual(args1, args3)).toBe(false);
