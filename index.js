@@ -22,39 +22,16 @@
  *
  * node's deepEqual and deepStrictEqual algorithm.
  *
- * <h2>ECMAScript compatibility shims for legacy JavaScript engines</h2>
- * `es5-shim.js` monkey-patches a JavaScript context to contain all EcmaScript 5
- * methods that can be faithfully emulated with a legacy JavaScript engine.
+ * Requires ES3 or above.
  *
- * `es5-sham.js` monkey-patches other ES5 methods as closely as possible.
- * For these methods, as closely as possible to ES5 is not very close.
- * Many of these shams are intended only to allow code to be written to ES5
- * without causing run-time errors in older engines. In many cases,
- * this means that these shams cause many ES5 methods to silently fail.
- * Decide carefully whether this is what you want. Note: es5-sham.js requires
- * es5-shim.js to be able to work properly.
- *
- * `json3.js` monkey-patches the EcmaScript 5 JSON implimentation faithfully.
- *
- * `es6.shim.js` provides compatibility shims so that legacy JavaScript engines
- * behave as closely as possible to ECMAScript 6 (Harmony).
- *
- * @version 1.3.0
+ * @version 1.4.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
  * @module deep-equal-x
  */
 
-/* jslint maxlen:80, es6:true, white:true */
-
-/* jshint bitwise:true, camelcase:true, curly:true, eqeqeq:true, forin:true,
-   freeze:true, futurehostile:true, latedef:true, newcap:true, nocomma:true,
-   nonbsp:true, singleGroups:true, strict:true, undef:true, unused:true,
-   es3:false, esnext:true, plusplus:true, maxparams:1, maxdepth:1,
-   maxstatements:3, maxcomplexity:2 */
-
-/* eslint strict: 1, max-statements: 1 */
+/* eslint strict: 1, max-statements: 1, complexity: 1, no-magic-numbers: 1 */
 
 /* global require, module, Map, Set */
 
@@ -73,24 +50,32 @@
   var isSet = require('is-set-x');
   var isNil = require('is-nil-x');
   var isRegExp = require('is-regex');
-  var pIndexOf = Array.prototype.indexOf;
-  var pPush = Array.prototype.push;
-  var pPop = Array.prototype.pop;
-  var pSlice = Array.prototype.slice;
-  var pSome = Array.prototype.some;
-  var pFilter = Array.prototype.filter;
-  var pSort = Array.prototype.sort;
-  var pTest = RegExp.prototype.test;
-  var rToString = RegExp.prototype.toString;
-  var pCharAt = String.prototype.charAt;
-  var pGetTime = Date.prototype.getTime;
-  var $Number = Number;
-  var $keys = Object.keys;
-  var $getPrototypeOf = Object.getPrototypeOf;
+  var indexOf = require('index-of-x');
+  var slice = require('lodash._slice');
+  var some = require('array.prototype.some');
+  var filter = require('lodash._arrayfilter');
+  var sort = require('stable');
+  var $keys = Object.keys || require('object-keys');
+  var toStringTag = require('to-string-tag-x');
+  var isNull = require('lodash.isnull');
+  var $getPrototypeOf = Object.getPrototypeOf || function getPrototypeOf(object) {
+    // eslint-disable-next-line no-proto
+    var proto = object.__proto__;
+    if (proto || isNull(proto)) {
+      return proto;
+    } else if (toStringTag(object.constructor) === '[object Function]') {
+      return object.constructor.prototype;
+    } else if (object instanceof Object) {
+      return Object.prototype;
+    } else {
+      return null;
+    }
+  };
+
   // Check failure of by-index access of string characters (IE < 9)
   // and failure of `0 in boxedString` (Rhino)
   var boxedString = Object('a');
-  var hasBoxedStringBug = boxedString[0] !== 'a' || !(0 in boxedString); // eslint-disable-line no-magic-numbers
+  var hasBoxedStringBug = boxedString[0] !== 'a' || !(0 in boxedString);
   // Used to detect unsigned integer values.
   var reIsUint = /^(?:0|[1-9]\d*)$/;
   var hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
@@ -116,10 +101,10 @@
    */
   var isIndex = function (value) {
     var num = -1;
-    if (pTest.call(reIsUint, value)) {
-      num = $Number(value);
+    if (reIsUint.test(value)) {
+      num = Number(value);
     }
-    return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex; // eslint-disable-line no-magic-numbers
+    return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
   };
 
   /**
@@ -134,7 +119,7 @@
    * @return {*} Returns the `value` referenced by the `key`.
    */
   var getItem = function (object, key, isStr, isIdx) {
-    return isStr && isIdx ? pCharAt.call(object, key) : object[key];
+    return isStr && isIdx ? object.charAt(key) : object[key];
   };
 
   /**
@@ -147,8 +132,8 @@
    * @returns {Array} Returns the filtered keys.
    */
   var filterUnwanted = function (keys, unwanted) {
-    return unwanted.length ? pFilter.call(keys, function (key) {
-      return pIndexOf.call(unwanted, key) === indexNotFound;
+    return unwanted.length ? filter(keys, function (key) {
+      return indexOf(unwanted, key) === indexNotFound;
     }) : keys;
   };
 
@@ -168,13 +153,13 @@
    * @return {boolean} `true` if `actual` and `expected` are deemed equal,
    *  otherwise `false`.
    */
-  var baseDeepEqual = function (actual, expected, strict, previousStack) { // eslint-disable-line complexity
+  var baseDeepEqual = function (actual, expected, strict, previousStack) {
     // 7.1. All identical values are equivalent, as determined by ===.
     if (actual === expected) {
       return true;
     }
     if (isBuffer(actual) && isBuffer(expected)) {
-      return actual.length === expected.length && !pSome.call(actual, function (item, index) {
+      return actual.length === expected.length && !some(actual, function (item, index) {
         return item !== expected[index];
       });
     }
@@ -182,14 +167,14 @@
     // 7.2. If the expected value is a Date object, the actual value is
     // equivalent if it is also a Date object that refers to the same time.
     if (isDate(actual) && isDate(expected)) {
-      return pGetTime.call(actual) === pGetTime.call(expected);
+      return actual.getTime() === expected.getTime();
     }
 
     // 7.3 If the expected value is a RegExp object, the actual value is
     // equivalent if it is also a RegExp object with the same `source` and
     // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
     if (isRegExp(actual) && isRegExp(expected)) {
-      return rToString.call(actual) === rToString.call(expected) && actual.lastIndex === expected.lastIndex;
+      return actual.toString() === expected.toString() && actual.lastIndex === expected.lastIndex;
     }
 
     // 7.4. Other pairs that do not both pass typeof value == 'object',
@@ -230,11 +215,7 @@
       if (ka.length !== kb.length) {
         return false;
       }
-      return baseDeepEqual(
-        pSlice.call(actual),
-        pSlice.call(expected),
-        strict,
-        null);
+      return baseDeepEqual(slice(actual), slice(expected), strict, null);
     }
     ka = $keys(actual);
     kb = $keys(expected);
@@ -262,8 +243,8 @@
       }
     }
     // the same set of keys (although not necessarily the same order),
-    pSort.call(ka);
-    pSort.call(kb);
+    sort.inplace(ka);
+    sort.inplace(kb);
     var aIsString, bIsString;
     if (hasBoxedStringBug) {
       aIsString = isString(actual);
@@ -272,7 +253,7 @@
     // ~~~cheap key test
     // equivalent values for every corresponding key, and
     // ~~~possibly expensive deep test
-    return !pSome.call(ka, function (key, index) {
+    return !some(ka, function (key, index) {
       if (key !== kb[index]) {
         return true;
       }
@@ -281,10 +262,10 @@
       var item = getItem(actual, key, aIsString, isIdx);
       var isPrim = isPrimitive(item);
       if (!isPrim) {
-        if (pIndexOf.call(stack, item) !== indexNotFound) {
+        if (indexOf(stack, item) !== indexNotFound) {
           throw new RangeError('Circular object');
         }
-        pPush.call(stack, item);
+        stack.push(item);
       }
       var result = !baseDeepEqual(
         item,
@@ -293,7 +274,7 @@
         stack
       );
       if (!isPrim) {
-        pPop.call(stack);
+        stack.pop();
       }
       return result;
     });
