@@ -1,6 +1,8 @@
 <a name="module_deep-equal-x"></a>
 
 ## deep-equal-x
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Xotic750/deep-equal-x.svg)](https://greenkeeper.io/)
 <a href="https://travis-ci.org/Xotic750/deep-equal-x"
 title="Travis status">
 <img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
