@@ -1,31 +1,29 @@
-<a name="module_deep-equal-x"></a>
-
-## deep-equal-x
 <a href="https://travis-ci.org/Xotic750/deep-equal-x"
-title="Travis status">
-<img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
-alt="Travis status" height="18">
+   title="Travis status">
+<img
+   src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
+   alt="Travis status" height="18"/>
 </a>
 <a href="https://david-dm.org/Xotic750/deep-equal-x"
-title="Dependency status">
+   title="Dependency status">
 <img src="https://david-dm.org/Xotic750/deep-equal-x.svg"
-alt="Dependency status" height="18"/>
+   alt="Dependency status" height="18"/>
 </a>
 <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies"
-title="devDependency status">
+   title="devDependency status">
 <img src="https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg"
-alt="devDependency status" height="18"/>
+   alt="devDependency status" height="18"/>
 </a>
 <a href="https://badge.fury.io/js/deep-equal-x" title="npm version">
 <img src="https://badge.fury.io/js/deep-equal-x.svg"
-alt="npm version" height="18">
+   alt="npm version" height="18"/>
 </a>
+<a name="module_deep-equal-x"></a>
 
+## deep-equal-x
 node's deepEqual and deepStrictEqual algorithm.
 
-Requires ES3 or above.
-
-**Version**: 1.6.0  
+**Version**: 1.7.0  
 **Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  

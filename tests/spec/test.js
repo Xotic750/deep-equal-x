@@ -24,12 +24,24 @@ if (typeof module === 'object' && module.exports) {
   deepEqual = returnExports;
 }
 
-var ifBufferSupport = typeof Buffer === 'function' ? it : xit;
+var hasBuffer = typeof Buffer === 'function';
+var ifBufferSupport = hasBuffer ? it : xit;
+var bufferFrom;
+if (hasBuffer) {
+  if (typeof Buffer.from === 'function') {
+    bufferFrom = Buffer.from;
+  } else {
+    bufferFrom = function from(value) {
+      // eslint-disable-next-line no-buffer-constructor
+      return new Buffer(value);
+    };
+  }
+}
+
 var ifArrayBufferSupport = typeof ArrayBuffer === 'function' ? it : xit;
 var ifSymbolSupport = typeof Symbol === 'function' && typeof Symbol('') === 'symbol' ? it : xit;
 var ifMapSupport = typeof Map === 'undefined' ? xit : it;
 var ifSetSupport = typeof Set === 'undefined' ? xit : it;
-var bufferShim = require('buffer-shims');
 
 var returnArgs = function () {
   return arguments;
@@ -211,17 +223,17 @@ describe('deepEqual', function () {
 
   describe('Buffer', function () {
     ifBufferSupport('comparing two buffers', function () {
-      var b1 = bufferShim.from([
+      var b1 = bufferFrom([
         1,
         2,
         3
       ]);
-      var b2 = bufferShim.from([
+      var b2 = bufferFrom([
         1,
         2,
         3
       ]);
-      var b3 = bufferShim.from([1, 2]);
+      var b3 = bufferFrom([1, 2]);
       expect(deepEqual(b1, b1)).toBe(true);
       expect(deepEqual(b1, b2)).toBe(true);
       expect(deepEqual(b1, b3)).toBe(false);
@@ -584,17 +596,17 @@ describe('deepStrictEqual', function () {
 
   describe('Buffer', function () {
     ifBufferSupport('comparing two buffers', function () {
-      var b1 = bufferShim.from([
+      var b1 = bufferFrom([
         1,
         2,
         3
       ]);
-      var b2 = bufferShim.from([
+      var b2 = bufferFrom([
         1,
         2,
         3
       ]);
-      var b3 = bufferShim.from([1, 2]);
+      var b3 = bufferFrom([1, 2]);
       expect(deepEqual(b1, b1, true)).toBe(true);
       expect(deepEqual(b1, b2, true)).toBe(true);
       expect(deepEqual(b1, b3, true)).toBe(false);

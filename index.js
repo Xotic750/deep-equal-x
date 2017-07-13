@@ -1,30 +1,6 @@
 /**
- * @file
- * <a href="https://travis-ci.org/Xotic750/deep-equal-x"
- * title="Travis status">
- * <img src="https://travis-ci.org/Xotic750/deep-equal-x.svg?branch=master"
- * alt="Travis status" height="18">
- * </a>
- * <a href="https://david-dm.org/Xotic750/deep-equal-x"
- * title="Dependency status">
- * <img src="https://david-dm.org/Xotic750/deep-equal-x.svg"
- * alt="Dependency status" height="18"/>
- * </a>
- * <a href="https://david-dm.org/Xotic750/deep-equal-x#info=devDependencies"
- * title="devDependency status">
- * <img src="https://david-dm.org/Xotic750/deep-equal-x/dev-status.svg"
- * alt="devDependency status" height="18"/>
- * </a>
- * <a href="https://badge.fury.io/js/deep-equal-x" title="npm version">
- * <img src="https://badge.fury.io/js/deep-equal-x.svg"
- * alt="npm version" height="18">
- * </a>
- *
- * node's deepEqual and deepStrictEqual algorithm.
- *
- * Requires ES3 or above.
- *
- * @version 1.6.0
+ * @file node's deepEqual and deepStrictEqual algorithm.
+ * @version 1.7.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -49,7 +25,7 @@ var slice = require('array-slice-x');
 var some = require('array.prototype.some');
 var filter = require('lodash._arrayfilter');
 var sort = require('stable');
-var $keys = Object.keys || require('object-keys');
+var $keys = require('object-keys-x');
 var $getPrototypeOf = require('get-prototype-of-x');
 
 // Check failure of by-index access of string characters (IE < 9)
@@ -97,7 +73,7 @@ var isIndex = function _isIndex(value) {
  * @param {string} key - The `key` reference to the `value`.
  * @param {boolean} isStr - Is the object a string.
  * @param {boolean} isIdx - Is the `key` a character index.
- * @return {*} Returns the `value` referenced by the `key`.
+ * @returns {*} Returns the `value` referenced by the `key`.
  */
 // eslint-disable-next-line max-params
 var getItem = function _getItem(object, key, isStr, isIdx) {
@@ -164,7 +140,12 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // 7.4. Other pairs that do not both pass typeof value == 'object',
   // equivalence is determined by == or strict ===.
   if (isObject(actual) === false && isObject(expected) === false) {
-    return strict ? actual === expected : actual == expected; // eslint-disable-line eqeqeq
+    if (strict) {
+      return actual === expected;
+    }
+
+    // eslint-disable-next-line eqeqeq
+    return actual == expected;
   }
 
   // 7.5 For all other Object pairs, including Array objects, equivalence is
@@ -176,6 +157,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   if (isNil(actual) || isNil(expected)) {
     return false;
   }
+
   /* jshint eqnull:false */
   // This only considers enumerable properties. It does not test object
   // prototypes, attached symbols, or non-enumerable properties. This can
@@ -183,10 +165,12 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   if (strict && $getPrototypeOf(actual) !== $getPrototypeOf(expected)) {
     return false;
   }
+
   // if one is actual primitive, the other must be same
   if (isPrimitive(actual) || isPrimitive(expected)) {
     return actual === expected;
   }
+
   var ka = isArguments(actual);
   var kb = isArguments(expected);
   var aNotB = ka && kb === false;
@@ -194,6 +178,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   if (aNotB || bNotA) {
     return false;
   }
+
   if (ka) {
     if (ka.length !== kb.length) {
       return false;
@@ -204,8 +189,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
 
   ka = $keys(actual);
   kb = $keys(expected);
-  // having the same number of owned properties (keys incorporates
-  // hasOwnProperty)
+  // having the same number of owned properties (keys incorporates hasOwnProperty)
   if (ka.length !== kb.length) {
     return false;
   }
