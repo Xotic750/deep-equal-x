@@ -30,7 +30,15 @@ var bufferFrom;
 if (hasBuffer) {
   if (typeof Buffer.from === 'function') {
     bufferFrom = Buffer.from;
-  } else {
+  }
+
+  try {
+    bufferFrom([
+      1,
+      2,
+      3
+    ]);
+  } catch (e) {
     bufferFrom = function from(value) {
       // eslint-disable-next-line no-buffer-constructor
       return new Buffer(value);
