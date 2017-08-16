@@ -1,6 +1,6 @@
 /**
  * @file node's deepEqual and deepStrictEqual algorithm.
- * @version 1.8.0
+ * @version 1.9.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -22,16 +22,15 @@ var isNil = require('is-nil-x');
 var isRegExp = require('is-regex');
 var indexOf = require('index-of-x');
 var slice = require('array-slice-x');
-var some = require('array.prototype.some');
-var filter = require('lodash._arrayfilter');
+var some = require('array-some-x');
+var filter = require('array-filter-x');
 var sort = require('stable');
 var $keys = require('object-keys-x');
 var $getPrototypeOf = require('get-prototype-of-x');
 
 // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
-var boxedString = Object('a');
-var hasBoxedStringBug = boxedString[0] !== 'a' || (0 in boxedString) === false;
+var hasBoxedStringBug = require('has-boxed-string-x') === false;
 // Used to detect unsigned integer values.
 var reIsUint = /^(?:0|[1-9]\d*)$/;
 var hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
@@ -217,7 +216,8 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // the same set of keys (although not necessarily the same order),
   sort.inplace(ka);
   sort.inplace(kb);
-  var aIsString, bIsString;
+  var aIsString;
+  var bIsString;
   if (hasBoxedStringBug) {
     aIsString = isString(actual);
     bIsString = isString(expected);

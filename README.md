@@ -23,7 +23,7 @@
 ## deep-equal-x
 node's deepEqual and deepStrictEqual algorithm.
 
-**Version**: 1.8.0  
+**Version**: 1.9.0  
 **Author**: Xotic750 <Xotic750@gmail.com>  
 **License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
 **Copyright**: Xotic750  
