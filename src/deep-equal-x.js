@@ -1,5 +1,5 @@
 /**
- * @file node's deepEqual and deepStrictEqual algorithm.
+ * @file Node's deepEqual and deepStrictEqual algorithm.
  * @version 1.9.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
@@ -7,35 +7,33 @@
  * @module deep-equal-x
  */
 
-'use strict';
-
-var isDate = require('is-date-object');
-var isArguments = require('is-arguments');
-var isPrimitive = require('is-primitive');
-var isObject = require('is-object');
-var isBuffer = require('is-buffer');
-var isString = require('is-string');
-var isError = require('is-error-x');
-var isMap = require('is-map-x');
-var isSet = require('is-set-x');
-var isNil = require('is-nil-x');
-var isRegExp = require('is-regex');
-var indexOf = require('index-of-x');
-var slice = require('array-slice-x');
-var some = require('array-some-x');
-var filter = require('array-filter-x');
-var sort = require('stable');
-var $keys = require('object-keys-x');
-var $getPrototypeOf = require('get-prototype-of-x');
+const isDate = require('is-date-object');
+const isArguments = require('is-arguments');
+const isPrimitive = require('is-primitive');
+const isObject = require('is-object');
+const isBuffer = require('is-buffer');
+const isString = require('is-string');
+const isError = require('is-error-x');
+const isMap = require('is-map-x');
+const isSet = require('is-set-x');
+const isNil = require('is-nil-x');
+const isRegExp = require('is-regex');
+const indexOf = require('index-of-x');
+const slice = require('array-slice-x');
+const some = require('array-some-x');
+const filter = require('array-filter-x');
+const sort = require('stable');
+const $keys = require('object-keys-x');
+const $getPrototypeOf = require('get-prototype-of-x');
 
 // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
-var hasBoxedStringBug = require('has-boxed-string-x') === false;
+const hasBoxedStringBug = require('has-boxed-string-x') === false;
 // Used to detect unsigned integer values.
-var reIsUint = /^(?:0|[1-9]\d*)$/;
-var hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
-var hasSetEnumerables = typeof Set === 'function' ? $keys(new Set()) : [];
-var hasErrorEnumerables;
+const reIsUint = /^(?:0|[1-9]\d*)$/;
+const hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
+const hasSetEnumerables = typeof Set === 'function' ? $keys(new Set()) : [];
+let hasErrorEnumerables;
 
 try {
   throw new Error('a');
@@ -43,8 +41,8 @@ try {
   hasErrorEnumerables = $keys(e);
 }
 
-var indexNotFound = -1;
-var maxSafeIndex = 4294967295; // (2^32)-1
+const indexNotFound = -1;
+const maxSafeIndex = 4294967295; // (2^32)-1
 
 /**
  * Checks if `value` is a valid string index. Specifically for boxed string
@@ -54,8 +52,9 @@ var maxSafeIndex = 4294967295; // (2^32)-1
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
  */
-var isIndex = function _isIndex(value) {
-  var num = indexNotFound;
+const isIndex = function _isIndex(value) {
+  let num = indexNotFound;
+
   if (reIsUint.test(value)) {
     num = Number(value);
   }
@@ -68,14 +67,14 @@ var isIndex = function _isIndex(value) {
  * string bug fix and not general purpose.
  *
  * @private
- * @param {Object} object - The object to get the `value` from.
+ * @param {object} object - The object to get the `value` from.
  * @param {string} key - The `key` reference to the `value`.
  * @param {boolean} isStr - Is the object a string.
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
 // eslint-disable-next-line max-params
-var getItem = function _getItem(object, key, isStr, isIdx) {
+const getItem = function _getItem(object, key, isStr, isIdx) {
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
 
@@ -88,10 +87,12 @@ var getItem = function _getItem(object, key, isStr, isIdx) {
  * @param {Array} unwanted - The unwanted keys.
  * @returns {Array} Returns the filtered keys.
  */
-var filterUnwanted = function _filterUnwanted(keys, unwanted) {
-  return unwanted.length ? filter(keys, function _filter(key) {
-    return indexOf(unwanted, key) === indexNotFound;
-  }) : keys;
+const filterUnwanted = function _filterUnwanted(keys, unwanted) {
+  return unwanted.length
+    ? filter(keys, function _filter(key) {
+        return indexOf(unwanted, key) === indexNotFound;
+      })
+    : keys;
 };
 
 /**
@@ -106,7 +107,7 @@ var filterUnwanted = function _filterUnwanted(keys, unwanted) {
  * @param {*} actual - First comparison object.
  * @param {*} expected - Second comparison object.
  * @param {boolean} [strict] - Comparison mode. If set to `true` use `===`.
- * @param {Object} - previousStack The circular stack.
+ * @param {object} - - PreviousStack The circular stack.
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  */
@@ -118,9 +119,12 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   }
 
   if (isBuffer(actual) && isBuffer(expected)) {
-    return actual.length === expected.length && some(actual, function _some1(item, index) {
-      return item !== expected[index];
-    }) === false;
+    return (
+      actual.length === expected.length &&
+      some(actual, function _some1(item, index) {
+        return item !== expected[index];
+      }) === false
+    );
   }
 
   // 7.2. If the expected value is a Date object, the actual value is
@@ -170,10 +174,11 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
     return actual === expected;
   }
 
-  var ka = isArguments(actual);
-  var kb = isArguments(expected);
-  var aNotB = ka && kb === false;
-  var bNotA = ka === false && kb;
+  let ka = isArguments(actual);
+  let kb = isArguments(expected);
+  const aNotB = ka && kb === false;
+  const bNotA = ka === false && kb;
+
   if (aNotB || bNotA) {
     return false;
   }
@@ -188,6 +193,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
 
   ka = $keys(actual);
   kb = $keys(expected);
+
   // having the same number of owned properties (keys incorporates hasOwnProperty)
   if (ka.length !== kb.length) {
     return false;
@@ -216,8 +222,9 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // the same set of keys (although not necessarily the same order),
   sort.inplace(ka);
   sort.inplace(kb);
-  var aIsString;
-  var bIsString;
+  let aIsString;
+  let bIsString;
+
   if (hasBoxedStringBug) {
     aIsString = isString(actual);
     bIsString = isString(expected);
@@ -226,36 +233,34 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // ~~~cheap key test
   // equivalent values for every corresponding key, and
   // ~~~possibly expensive deep test
-  return some(ka, function _some2(key, index) {
-    if (key !== kb[index]) {
-      return true;
-    }
-
-    var isIdx = (aIsString || bIsString) && isIndex(key);
-    var stack = previousStack ? previousStack : [actual];
-    var item = getItem(actual, key, aIsString, isIdx);
-    var isPrim = isPrimitive(item);
-    if (isPrim === false) {
-      if (indexOf(stack, item) !== indexNotFound) {
-        throw new RangeError('Circular object');
+  return (
+    some(ka, function _some2(key, index) {
+      if (key !== kb[index]) {
+        return true;
       }
 
-      stack.push(item);
-    }
+      const isIdx = (aIsString || bIsString) && isIndex(key);
+      const stack = previousStack || [actual];
+      const item = getItem(actual, key, aIsString, isIdx);
+      const isPrim = isPrimitive(item);
 
-    var result = baseDeepEqual(
-      item,
-      getItem(expected, key, bIsString, isIdx),
-      strict,
-      stack
-    ) === false;
+      if (isPrim === false) {
+        if (indexOf(stack, item) !== indexNotFound) {
+          throw new RangeError('Circular object');
+        }
 
-    if (isPrim === false) {
-      stack.pop();
-    }
+        stack.push(item);
+      }
 
-    return result;
-  }) === false;
+      const result = baseDeepEqual(item, getItem(expected, key, bIsString, isIdx), strict, stack) === false;
+
+      if (isPrim === false) {
+        stack.pop();
+      }
+
+      return result;
+    }) === false
+  );
 };
 
 /**
