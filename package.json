@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "array-filter-x": "^2.3.0",
-    "array-slice-x": "^3.5.0",
+    "array-slice-x": "^4.0.0",
     "array-some-x": "^2.5.0",
     "get-prototype-of-x": "^1.4.0",
     "has-boxed-string-x": "^2.0.3",
