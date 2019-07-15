@@ -52,7 +52,7 @@
     "array-some-x": "^2.5.0",
     "get-prototype-of-x": "^2.0.1",
     "has-boxed-string-x": "^2.0.4",
-    "index-of-x": "^2.3.0",
+    "index-of-x": "^3.0.0",
     "is-arguments": "^1.0.4",
     "is-buffer": "^2.0.3",
     "is-date-object": "^1.0.1",
