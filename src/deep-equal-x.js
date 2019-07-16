@@ -1,12 +1,3 @@
-/**
- * @file Node's deepEqual and deepStrictEqual algorithm.
- * @version 1.9.0
- * @author Xotic750 <Xotic750@gmail.com>
- * @copyright  Xotic750
- * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module deep-equal-x
- */
-
 import isDate from 'is-date-object';
 
 import isArguments from 'is-arguments';
@@ -278,25 +269,6 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
- * @example
- * var deepEqual = require('deep-equal-x');
- *
- * deepEqual(Error('a'), Error('b'));
- * // => true
- * // This does not return `false` because the properties on the  Error object
- * // are non-enumerable:
- *
- * deepEqual(4, '4');
- * // => true
- *
- * deepEqual({ a: 4, b: '1' }, {  b: '1', a: 4 });
- * // => true
- *
- * deepEqual(new Date(), new Date(2000, 3, 14));
- * // => false
- *
- * deepEqual(4, '4', true);
- * // => false
  */
 export default function deepEqual(actual, expected, strict) {
   return baseDeepEqual(actual, expected, strict);
