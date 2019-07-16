@@ -7,24 +7,25 @@
  * @module deep-equal-x
  */
 
-const isDate = require('is-date-object');
-const isArguments = require('is-arguments');
-const isPrimitive = require('is-primitive');
-const isObject = require('is-object');
-const isBuffer = require('is-buffer');
-const isString = require('is-string');
-const isError = require('is-error-x');
-const isMap = require('is-map-x');
-const isSet = require('is-set-x');
-const isNil = require('is-nil-x');
-const isRegExp = require('is-regex');
-const indexOf = require('index-of-x');
-const slice = require('array-slice-x');
-const some = require('array-some-x');
-const filter = require('array-filter-x');
-const sort = require('stable');
-const $keys = require('object-keys-x');
-const $getPrototypeOf = require('get-prototype-of-x');
+import isDate from 'is-date-object';
+
+import isArguments from 'is-arguments';
+import isPrimitive from 'is-primitive';
+import isObject from 'is-object';
+import isBuffer from 'is-buffer';
+import isString from 'is-string';
+import isError from 'is-error-x';
+import isMap from 'is-map-x';
+import isSet from 'is-set-x';
+import isNil from 'is-nil-x';
+import isRegExp from 'is-regex';
+import indexOf from 'index-of-x';
+import slice from 'array-slice-x';
+import some from 'array-some-x';
+import filter from 'array-filter-x';
+import sort from 'stable';
+import $keys from 'object-keys-x';
+import $getPrototypeOf from 'get-prototype-of-x';
 
 // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
@@ -297,6 +298,6 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
  * deepEqual(4, '4', true);
  * // => false
  */
-module.exports = function deepEqual(actual, expected, strict) {
+export default function deepEqual(actual, expected, strict) {
   return baseDeepEqual(actual, expected, strict);
-};
+}
