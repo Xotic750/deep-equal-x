@@ -270,6 +270,8 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
  */
-export default function deepEqual(actual, expected, strict) {
+const deepEqual = function deepEqual(actual, expected, strict) {
   return baseDeepEqual(actual, expected, strict);
-}
+};
+
+export default deepEqual;
