@@ -16,18 +16,19 @@ import filter from 'array-filter-x';
 import sort from 'stable';
 import $keys from 'object-keys-x';
 import $getPrototypeOf from 'get-prototype-of-x';
-import hasBoxedString from 'has-boxed-string-x';
-
-// Check failure of by-index access of string characters (IE < 9)
+import hasBoxedString from 'has-boxed-string-x'; // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
-const hasBoxedStringBug = hasBoxedString === false;
-// Used to detect unsigned integer values.
-const reIsUint = /^(?:0|[1-9]\d*)$/;
+
+var hasBoxedStringBug = hasBoxedString === false; // Used to detect unsigned integer values.
+
+var reIsUint = /^(?:0|[1-9]\d*)$/;
 /* eslint-disable-next-line compat/compat */
-const hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
+
+var hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
 /* eslint-disable-next-line compat/compat */
-const hasSetEnumerables = typeof Set === 'function' ? $keys(new Set()) : [];
-let hasErrorEnumerables;
+
+var hasSetEnumerables = typeof Set === 'function' ? $keys(new Set()) : [];
+var hasErrorEnumerables;
 
 try {
   // noinspection ExceptionCaughtLocallyJS
@@ -36,8 +37,8 @@ try {
   hasErrorEnumerables = $keys(e);
 }
 
-const indexNotFound = -1;
-const maxSafeIndex = 4294967295; // (2^32)-1
+var indexNotFound = -1;
+var maxSafeIndex = 4294967295; // (2^32)-1
 
 /**
  * Checks if `value` is a valid string index. Specifically for boxed string
@@ -47,8 +48,9 @@ const maxSafeIndex = 4294967295; // (2^32)-1
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
  */
-const isIndex = function _isIndex(value) {
-  let num = indexNotFound;
+
+var isIndex = function _isIndex(value) {
+  var num = indexNotFound;
 
   if (reIsUint.test(value)) {
     num = Number(value);
@@ -56,7 +58,6 @@ const isIndex = function _isIndex(value) {
 
   return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
 };
-
 /**
  * Get an object's key avoiding boxed string bug. Specifically for boxed
  * string bug fix and not general purpose.
@@ -68,10 +69,11 @@ const isIndex = function _isIndex(value) {
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
-const getItem = function _getItem(object, key, isStr, isIdx) {
+
+
+var getItem = function _getItem(object, key, isStr, isIdx) {
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
-
 /**
  * Filter `keys` of unwanted Error enumerables. Specifically for Error has
  * unwanted enumerables fix and not general purpose.
@@ -81,14 +83,13 @@ const getItem = function _getItem(object, key, isStr, isIdx) {
  * @param {Array} unwanted - The unwanted keys.
  * @returns {Array} Returns the filtered keys.
  */
-const filterUnwanted = function _filterUnwanted(keys, unwanted) {
-  return unwanted.length
-    ? filter(keys, function _filter(key) {
-        return indexOf(unwanted, key) === indexNotFound;
-      })
-    : keys;
-};
 
+
+var filterUnwanted = function _filterUnwanted(keys, unwanted) {
+  return unwanted.length ? filter(keys, function _filter(key) {
+    return indexOf(unwanted, key) === indexNotFound;
+  }) : keys;
+};
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -105,72 +106,73 @@ const filterUnwanted = function _filterUnwanted(keys, unwanted) {
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  */
-const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousStack) {
+
+
+var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousStack) {
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {
     return true;
   }
 
   if (isBuffer(actual) && isBuffer(expected)) {
-    return (
-      actual.length === expected.length &&
-      some(actual, function _some1(item, index) {
-        return item !== expected[index];
-      }) === false
-    );
-  }
-
-  // 7.2. If the expected value is a Date object, the actual value is
+    return actual.length === expected.length && some(actual, function _some1(item, index) {
+      return item !== expected[index];
+    }) === false;
+  } // 7.2. If the expected value is a Date object, the actual value is
   // equivalent if it is also a Date object that refers to the same time.
+
+
   if (isDate(actual) && isDate(expected)) {
     return actual.getTime() === expected.getTime();
-  }
-
-  // 7.3 If the expected value is a RegExp object, the actual value is
+  } // 7.3 If the expected value is a RegExp object, the actual value is
   // equivalent if it is also a RegExp object with the same `source` and
   // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
+
+
   if (isRegExp(actual) && isRegExp(expected)) {
     return actual.toString() === expected.toString() && actual.lastIndex === expected.lastIndex;
-  }
-
-  // 7.4. Other pairs that do not both pass typeof value == 'object',
+  } // 7.4. Other pairs that do not both pass typeof value == 'object',
   // equivalence is determined by == or strict ===.
+
+
   if (isObject(actual) === false && isObject(expected) === false) {
     if (strict) {
       return actual === expected;
-    }
+    } // noinspection EqualityComparisonWithCoercionJS
 
-    // noinspection EqualityComparisonWithCoercionJS
-    return actual == expected; /* eslint-disable-line eqeqeq */
-  }
 
-  // 7.5 For all other Object pairs, including Array objects, equivalence is
+    return actual == expected;
+    /* eslint-disable-line eqeqeq */
+  } // 7.5 For all other Object pairs, including Array objects, equivalence is
   // determined by having the same number of owned properties (as verified
   // with Object.prototype.hasOwnProperty.call), the same set of keys
   // (although not necessarily the same order), equivalent values for every
   // corresponding key, and an identical 'prototype' property. Note: this
   // accounts for both named and indexed properties on Arrays.
+
+
   if (isNil(actual) || isNil(expected)) {
     return false;
   }
-
   /* jshint eqnull:false */
   // This only considers enumerable properties. It does not test object
   // prototypes, attached symbols, or non-enumerable properties. This can
   // lead to some potentially surprising results.
+
+
   if (strict && $getPrototypeOf(actual) !== $getPrototypeOf(expected)) {
     return false;
-  }
+  } // if one is actual primitive, the other must be same
 
-  // if one is actual primitive, the other must be same
+
   if (isPrimitive(actual) || isPrimitive(expected)) {
     return actual === expected;
   }
 
-  let ka = isArguments(actual);
-  let kb = isArguments(expected);
-  const aNotB = ka && kb === false;
-  const bNotA = ka === false && kb;
+  var ka = isArguments(actual);
+  var kb = isArguments(expected);
+  var aNotB = ka && kb === false;
+  var bNotA = ka === false && kb;
 
   if (aNotB || bNotA) {
     return false;
@@ -185,9 +187,8 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
   }
 
   ka = $keys(actual);
-  kb = $keys(expected);
+  kb = $keys(expected); // having the same number of owned properties (keys incorporates hasOwnProperty)
 
-  // having the same number of owned properties (keys incorporates hasOwnProperty)
   if (ka.length !== kb.length) {
     return false;
   }
@@ -210,52 +211,49 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
     } else if (isSet(expected)) {
       kb = filterUnwanted(kb, hasSetEnumerables);
     }
-  }
+  } // the same set of keys (although not necessarily the same order),
 
-  // the same set of keys (although not necessarily the same order),
+
   sort.inplace(ka);
   sort.inplace(kb);
-  let aIsString;
-  let bIsString;
+  var aIsString;
+  var bIsString;
 
   if (hasBoxedStringBug) {
     aIsString = isString(actual);
     bIsString = isString(expected);
-  }
-
-  // ~~~cheap key test
+  } // ~~~cheap key test
   // equivalent values for every corresponding key, and
   // ~~~possibly expensive deep test
-  return (
-    some(ka, function _some2(key, index) {
-      if (key !== kb[index]) {
-        return true;
+
+
+  return some(ka, function _some2(key, index) {
+    if (key !== kb[index]) {
+      return true;
+    }
+
+    var isIdx = (aIsString || bIsString) && isIndex(key);
+    var stack = previousStack || [actual];
+    var item = getItem(actual, key, aIsString, isIdx);
+    var isPrim = isPrimitive(item);
+
+    if (isPrim === false) {
+      if (indexOf(stack, item) !== indexNotFound) {
+        throw new RangeError('Circular object');
       }
 
-      const isIdx = (aIsString || bIsString) && isIndex(key);
-      const stack = previousStack || [actual];
-      const item = getItem(actual, key, aIsString, isIdx);
-      const isPrim = isPrimitive(item);
+      stack.push(item);
+    }
 
-      if (isPrim === false) {
-        if (indexOf(stack, item) !== indexNotFound) {
-          throw new RangeError('Circular object');
-        }
+    var result = baseDeepEqual(item, getItem(expected, key, bIsString, isIdx), strict, stack) === false;
 
-        stack.push(item);
-      }
+    if (isPrim === false) {
+      stack.pop();
+    }
 
-      const result = baseDeepEqual(item, getItem(expected, key, bIsString, isIdx), strict, stack) === false;
-
-      if (isPrim === false) {
-        stack.pop();
-      }
-
-      return result;
-    }) === false
-  );
+    return result;
+  }) === false;
 };
-
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -271,8 +269,12 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
  */
-const deepEqual = function deepEqual(actual, expected, strict) {
+
+
+var deepEqual = function deepEqual(actual, expected, strict) {
   return baseDeepEqual(actual, expected, strict);
 };
 
 export default deepEqual;
+
+//# sourceMappingURL=deep-equal-x.esm.js.map

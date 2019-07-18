@@ -1,6 +1,4 @@
-/* global ArrayBuffer, Int32Array */
-
-let deepEqual;
+import deepEqual from '../src/deep-equal-x';
 
 const hasBuffer = typeof Buffer === 'function';
 const ifBufferSupport = hasBuffer ? it : xit;
@@ -15,7 +13,7 @@ if (hasBuffer) {
     bufferFrom([1, 2, 3]);
   } catch (e) {
     bufferFrom = function from(value) {
-      // eslint-disable-next-line no-buffer-constructor
+      /* eslint-disable-next-line no-buffer-constructor */
       return new Buffer(value);
     };
   }
@@ -33,7 +31,7 @@ const returnArgs = function() {
 describe('deepEqual', function() {
   describe('7.2', function() {
     it('dates', function() {
-      expect.assertions(1);
+      expect.assertions(2);
       expect(deepEqual(new Date(), new Date(2000, 3, 14))).toBe(false);
       expect(deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14))).toBe(true);
     });
@@ -41,7 +39,7 @@ describe('deepEqual', function() {
 
   describe('7.3', function() {
     it('regExps', function() {
-      expect.assertions(1);
+      expect.assertions(12);
       const re1 = /a/;
       re1.lastIndex = 3;
 
@@ -64,7 +62,7 @@ describe('deepEqual', function() {
 
   describe('7.4', function() {
     it('`==` equality', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       expect(deepEqual(4, '5')).toBe(false);
       expect(deepEqual(4, '4')).toBe(true);
       expect(deepEqual(true, 1)).toBe(true);
@@ -73,7 +71,7 @@ describe('deepEqual', function() {
 
   describe('7.5', function() {
     it('own properties & keys (not necessarily the same order)', function() {
-      expect.assertions(1);
+      expect.assertions(9);
       const a1 = [1, 2, 3];
       const a2 = [1, 2, 3];
       a1.a = 'test';
@@ -119,7 +117,7 @@ describe('deepEqual', function() {
           },
           {
             b: '1',
-            a: 4, // eslint-disable-line sort-keys
+            a: 4,
           },
         ),
       ).toBe(true);
@@ -173,7 +171,7 @@ describe('deepEqual', function() {
     NameBuilder2.prototype = Object;
 
     it('prototype property comparison', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       let nb1 = new NameBuilder1('John', 'Smith');
       let nb2 = new NameBuilder2('John', 'Smith');
       expect(deepEqual(nb1, nb2)).toBe(true);
@@ -188,7 +186,7 @@ describe('deepEqual', function() {
 
   describe('eS6 primitives', function() {
     it('compared to similar objects', function() {
-      expect.assertions(1);
+      expect.assertions(6);
       expect(deepEqual(null, {})).toBe(false);
       expect(deepEqual(undefined, {})).toBe(false);
       expect(deepEqual('a', ['a'])).toBe(false);
@@ -210,7 +208,7 @@ describe('deepEqual', function() {
 
   describe('object wrappers', function() {
     it('when comparing similar objects', function() {
-      expect.assertions(1);
+      expect.assertions(4);
       expect(deepEqual(Object('a'), ['a'])).toBe(true);
       expect(deepEqual(Object('a'), {0: 'a'})).toBe(true);
       expect(deepEqual(Object(1), {})).toBe(true);
@@ -287,7 +285,7 @@ describe('deepEqual', function() {
 
   describe('circular refs', function() {
     it("make sure it doesn't loop forever", function() {
-      expect.assertions(1);
+      expect.assertions(3);
       const b = {
         s: '',
         t: true,
@@ -321,7 +319,7 @@ describe('deepEqual', function() {
 
   describe('reflexivity', function() {
     it('`arguments` objects', function() {
-      expect.assertions(1);
+      expect.assertions(2);
       const args = returnArgs();
       expect(deepEqual([], args)).toBe(false);
       expect(deepEqual(args, [])).toBe(false);
@@ -330,7 +328,7 @@ describe('deepEqual', function() {
 
   describe('arguments', function() {
     it('comparing same type objects', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       const args1 = returnArgs(1, 2, 3);
       const args2 = returnArgs(1, 2, 3);
       const args3 = returnArgs(1, 3, 4);
@@ -353,7 +351,7 @@ describe('deepEqual', function() {
 describe('deepStrictEqual', function() {
   describe('7.2', function() {
     it('dates', function() {
-      expect.assertions(1);
+      expect.assertions(2);
       expect(deepEqual(new Date(), new Date(2000, 3, 14), true)).toBe(false);
       expect(deepEqual(new Date(2000, 3, 14), new Date(2000, 3, 14), true)).toBe(true);
     });
@@ -361,7 +359,7 @@ describe('deepStrictEqual', function() {
 
   describe('7.3', function() {
     it('regExps', function() {
-      expect.assertions(1);
+      expect.assertions(12);
       const re1 = /a/;
       re1.lastIndex = 3;
 
@@ -384,7 +382,7 @@ describe('deepStrictEqual', function() {
 
   describe('7.4', function() {
     it('`===` equality', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       expect(deepEqual(4, '5', true)).toBe(false);
       expect(deepEqual(4, '4', true)).toBe(false);
       expect(deepEqual(true, 1, true)).toBe(false);
@@ -393,7 +391,7 @@ describe('deepStrictEqual', function() {
 
   describe('7.5', function() {
     it('own properties & keys (not necessarily the same order)', function() {
-      expect.assertions(1);
+      expect.assertions(10);
       const a1 = [1, 2, 3];
       const a2 = [1, 2, 3];
       a1.a = 'test';
@@ -443,7 +441,7 @@ describe('deepStrictEqual', function() {
           },
           {
             b: '1',
-            a: 4, // eslint-disable-line sort-keys
+            a: 4,
           },
           true,
         ),
@@ -498,7 +496,7 @@ describe('deepStrictEqual', function() {
     NameBuilder2.prototype = Object;
 
     it('prototype property comparison', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       let nb1 = new NameBuilder1('John', 'Smith');
       let nb2 = new NameBuilder2('John', 'Smith');
       expect(deepEqual(nb1, nb2, true)).toBe(false);
@@ -513,7 +511,7 @@ describe('deepStrictEqual', function() {
 
   describe('eS6 primitives', function() {
     it('compared to similar objects', function() {
-      expect.assertions(1);
+      expect.assertions(6);
       expect(deepEqual(null, {}, true)).toBe(false);
       expect(deepEqual(undefined, {}, true)).toBe(false);
       expect(deepEqual('a', ['a'], true)).toBe(false);
@@ -535,7 +533,7 @@ describe('deepStrictEqual', function() {
 
   describe('object wrappers', function() {
     it('when comparing similar objects', function() {
-      expect.assertions(1);
+      expect.assertions(4);
       expect(deepEqual(Object('a'), ['a'], true)).toBe(false);
       expect(deepEqual(Object('a'), {0: 'a'}, true)).toBe(false);
       expect(deepEqual(Object(1), {}, true)).toBe(false);
@@ -566,7 +564,7 @@ describe('deepStrictEqual', function() {
 
   describe('circular refs', function() {
     it("make sure it doesn't loop forever", function() {
-      expect.assertions(1);
+      expect.assertions(3);
       const b = {
         s: '',
         t: true,
@@ -646,16 +644,16 @@ describe('deepStrictEqual', function() {
 
   describe('reflexivity', function() {
     it('`arguments` objects', function() {
-      expect.assertions(1);
+      expect.assertions(2);
       const args = returnArgs();
-      expect(deepEqual([], args), true).toBe(false);
-      expect(deepEqual(args, []), true).toBe(false);
+      expect(deepEqual([], args, true)).toBe(false);
+      expect(deepEqual(args, [], true)).toBe(false);
     });
   });
 
   describe('arguments', function() {
     it('comparing same type objects', function() {
-      expect.assertions(1);
+      expect.assertions(3);
       const args1 = returnArgs(1, 2, 3);
       const args2 = returnArgs(1, 2, 3);
       const args3 = returnArgs(1, 3, 4);
