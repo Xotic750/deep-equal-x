@@ -1,13 +1,13 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-18T23:05:20.526Z",
+  "date": "2019-07-19T22:45:37.349Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "6afa4a76b7c3ca5f5b72",
+  "hash": "6658b371397451fe69f9",
   "license": "MIT",
-  "version": "2.0.1"
+  "version": "2.0.2"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -119,7 +119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -152,7 +152,7 @@ module.exports = function isPrimitive(val) {
 
 
 var toStr = Object.prototype.toString;
-var hasSymbols = __webpack_require__(11)();
+var hasSymbols = __webpack_require__(10)();
 
 if (hasSymbols) {
 	var symToStr = Symbol.prototype.toString;
@@ -311,52 +311,6 @@ module.exports = function isBuffer (obj) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-var has = __webpack_require__(14);
-var regexExec = RegExp.prototype.exec;
-var gOPD = Object.getOwnPropertyDescriptor;
-
-var tryRegexExecCall = function tryRegexExec(value) {
-	try {
-		var lastIndex = value.lastIndex;
-		value.lastIndex = 0;
-
-		regexExec.call(value);
-		return true;
-	} catch (e) {
-		return false;
-	} finally {
-		value.lastIndex = lastIndex;
-	}
-};
-var toStr = Object.prototype.toString;
-var regexClass = '[object RegExp]';
-var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-module.exports = function isRegex(value) {
-	if (!value || typeof value !== 'object') {
-		return false;
-	}
-	if (!hasToStringTag) {
-		return toStr.call(value) === regexClass;
-	}
-
-	var descriptor = gOPD(value, 'lastIndex');
-	var hasLastIndexDataProperty = descriptor && has(descriptor, 'value');
-	if (!hasLastIndexDataProperty) {
-		return false;
-	}
-
-	return tryRegexExecCall(value);
-};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
 //! stable.js 0.1.8, https://github.com/Two-Screen/stable
 //! © 2018 Angry Bytes and contributors. MIT licensed.
 
@@ -468,7 +422,7 @@ module.exports = function isRegex(value) {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -492,17 +446,17 @@ module.exports = function isArguments(value) {
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var slice = Array.prototype.slice;
-var isArgs = __webpack_require__(9);
+var isArgs = __webpack_require__(8);
 
 var origKeys = Object.keys;
-var keysShim = origKeys ? function keys(o) { return origKeys(o); } : __webpack_require__(17);
+var keysShim = origKeys ? function keys(o) { return origKeys(o); } : __webpack_require__(13);
 
 var originalKeys = Object.keys;
 
@@ -531,14 +485,14 @@ module.exports = keysShim;
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
 var origSymbol = global.Symbol;
-var hasSymbolSham = __webpack_require__(13);
+var hasSymbolSham = __webpack_require__(12);
 
 module.exports = function hasNativeSymbols() {
 	if (typeof origSymbol !== 'function') { return false; }
@@ -549,10 +503,10 @@ module.exports = function hasNativeSymbols() {
 	return hasSymbolSham();
 };
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(11)))
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var g;
@@ -578,7 +532,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -627,90 +581,7 @@ module.exports = function hasSymbols() {
 
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var bind = __webpack_require__(15);
-
-module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var implementation = __webpack_require__(16);
-
-module.exports = Function.prototype.bind || implementation;
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/* eslint no-invalid-this: 1 */
-
-var ERROR_MESSAGE = 'Function.prototype.bind called on incompatible ';
-var slice = Array.prototype.slice;
-var toStr = Object.prototype.toString;
-var funcType = '[object Function]';
-
-module.exports = function bind(that) {
-    var target = this;
-    if (typeof target !== 'function' || toStr.call(target) !== funcType) {
-        throw new TypeError(ERROR_MESSAGE + target);
-    }
-    var args = slice.call(arguments, 1);
-
-    var bound;
-    var binder = function () {
-        if (this instanceof bound) {
-            var result = target.apply(
-                this,
-                args.concat(slice.call(arguments))
-            );
-            if (Object(result) === result) {
-                return result;
-            }
-            return this;
-        } else {
-            return target.apply(
-                that,
-                args.concat(slice.call(arguments))
-            );
-        }
-    };
-
-    var boundLength = Math.max(0, target.length - args.length);
-    var boundArgs = [];
-    for (var i = 0; i < boundLength; i++) {
-        boundArgs.push('$' + i);
-    }
-
-    bound = Function('binder', 'return function (' + boundArgs.join(',') + '){ return binder.apply(this,arguments); }')(binder);
-
-    if (target.prototype) {
-        var Empty = function Empty() {};
-        Empty.prototype = target.prototype;
-        bound.prototype = new Empty();
-        Empty.prototype = null;
-    }
-
-    return bound;
-};
-
-
-/***/ }),
-/* 17 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -721,7 +592,7 @@ if (!Object.keys) {
 	// modified from https://github.com/es-shims/es5-shim
 	var has = Object.prototype.hasOwnProperty;
 	var toStr = Object.prototype.toString;
-	var isArgs = __webpack_require__(9); // eslint-disable-line global-require
+	var isArgs = __webpack_require__(8); // eslint-disable-line global-require
 	var isEnumerable = Object.prototype.propertyIsEnumerable;
 	var hasDontEnumBug = !isEnumerable.call({ toString: null }, 'toString');
 	var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
@@ -839,7 +710,7 @@ module.exports = keysShim;
 
 
 /***/ }),
-/* 18 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1964,7 +1835,7 @@ var hop = {}.hasOwnProperty;
  *
  * @param {!object} object - The object to test.
  * @throws {TypeError} If object is null or undefined.
- * @param {string|Symbol} property - The name or Symbol of the property to test.
+ * @param {string|number|Symbol} property - The name or Symbol of the property to test.
  * @returns {boolean} `true` if the property is set on `object`, else `false`.
  */
 
@@ -2834,9 +2705,262 @@ var is_set_x_esm_isSet = function isSet(object) {
 /* harmony default export */ var is_set_x_esm = (is_set_x_esm_isSet);
 
 
-// EXTERNAL MODULE: ./node_modules/is-regex/index.js
-var is_regex = __webpack_require__(7);
-var is_regex_default = /*#__PURE__*/__webpack_require__.n(is_regex);
+// CONCATENATED MODULE: ./node_modules/assert-is-object-x/dist/assert-is-object-x.esm.js
+
+
+/**
+ * Tests `value` to see if it is an object, throws a `TypeError` if it is
+ * not. Otherwise returns the `value`.
+ *
+ * @param {*} value - The argument to be tested.
+ * @throws {TypeError} Throws if `value` is not an object.
+ * @returns {*} Returns `value` if it is an object.
+ */
+
+var assert_is_object_x_esm_assertIsObject = function assertIsObject(value) {
+  if (is_primitive_default()(value)) {
+    throw new TypeError("".concat(to_string_symbols_supported_x_esm(value), " is not an object"));
+  }
+
+  return value;
+};
+
+/* harmony default export */ var assert_is_object_x_esm = (assert_is_object_x_esm_assertIsObject);
+
+
+// CONCATENATED MODULE: ./node_modules/object-define-property-x/dist/object-define-property-x.esm.js
+
+
+
+
+
+
+/** @type {BooleanConstructor} */
+
+var object_define_property_x_esm_castBoolean = true.constructor;
+var nativeDefProp = typeof Object.defineProperty === 'function' && Object.defineProperty;
+var definePropertyFallback;
+
+var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
+  var object = to_object_x_esm(desc);
+  var descriptor = {};
+
+  if (has_own_property_x_esm(object, 'enumerable')) {
+    descriptor.enumerable = object_define_property_x_esm_castBoolean(object.enumerable);
+  }
+
+  if (has_own_property_x_esm(object, 'configurable')) {
+    descriptor.configurable = object_define_property_x_esm_castBoolean(object.configurable);
+  }
+
+  if (has_own_property_x_esm(object, 'value')) {
+    descriptor.value = object.value;
+  }
+
+  if (has_own_property_x_esm(object, 'writable')) {
+    descriptor.writable = object_define_property_x_esm_castBoolean(object.writable);
+  }
+
+  if (has_own_property_x_esm(object, 'get')) {
+    var getter = object.get;
+
+    if (typeof getter !== 'undefined' && is_function_x_esm(getter) === false) {
+      throw new TypeError('getter must be a function');
+    }
+
+    descriptor.get = getter;
+  }
+
+  if (has_own_property_x_esm(object, 'set')) {
+    var setter = object.set;
+
+    if (typeof setter !== 'undefined' && is_function_x_esm(setter) === false) {
+      throw new TypeError('setter must be a function');
+    }
+
+    descriptor.set = setter;
+  }
+
+  if ((has_own_property_x_esm(descriptor, 'get') || has_own_property_x_esm(descriptor, 'set')) && (has_own_property_x_esm(descriptor, 'value') || has_own_property_x_esm(descriptor, 'writable'))) {
+    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+  }
+
+  return descriptor;
+}; // ES5 15.2.3.6
+// http://es5.github.com/#x15.2.3.6
+// Patch for WebKit and IE8 standard mode
+// Designed by hax <hax.github.com>
+// related issue: https://github.com/es-shims/es5-shim/issues#issue/5
+// IE8 Reference:
+//     http://msdn.microsoft.com/en-us/library/dd282900.aspx
+//     http://msdn.microsoft.com/en-us/library/dd229916.aspx
+// WebKit Bugs:
+//     https://bugs.webkit.org/show_bug.cgi?id=36423
+
+/**
+ * This method defines a new property directly on an object, or modifies an
+ * existing property on an object, and returns the object.
+ *
+ * @param {object} object - The object on which to define the property.
+ * @param {string} property - The name of the property to be defined or modified.
+ * @param {object} descriptor - The descriptor for the property being defined or modified.
+ * @returns {object} The object that was passed to the function.
+ * });.
+ */
+
+
+var $defineProperty; // check whether defineProperty works if it's given. Otherwise, shim partially.
+
+if (nativeDefProp) {
+  var testWorksWith = function _testWorksWith(object) {
+    var testResult = attempt_x_esm(nativeDefProp, object, 'sentinel', {});
+    return testResult.threw === false && testResult.value === object && 'sentinel' in object;
+  };
+
+  var object_define_property_x_esm_doc = typeof document !== 'undefined' && document;
+
+  if (testWorksWith({}) && (object_define_property_x_esm_castBoolean(object_define_property_x_esm_doc) === false || testWorksWith(object_define_property_x_esm_doc.createElement('div')))) {
+    $defineProperty = function defineProperty(object, property, descriptor) {
+      return nativeDefProp(assert_is_object_x_esm(object), to_property_key_x_esm(property), toPropertyDescriptor(descriptor));
+    };
+  } else {
+    definePropertyFallback = nativeDefProp;
+  }
+}
+
+if (object_define_property_x_esm_castBoolean(nativeDefProp) === false || definePropertyFallback) {
+  var object_define_property_x_esm_prototypeOfObject = Object.prototype; // If JS engine supports accessors creating shortcuts.
+
+  var defineGetter;
+  var defineSetter;
+  var object_define_property_x_esm_lookupGetter;
+  var object_define_property_x_esm_lookupSetter;
+  var object_define_property_x_esm_supportsAccessors = has_own_property_x_esm(object_define_property_x_esm_prototypeOfObject, '__defineGetter__');
+
+  if (object_define_property_x_esm_supportsAccessors) {
+    /* eslint-disable-next-line no-underscore-dangle,no-restricted-properties */
+    defineGetter = object_define_property_x_esm_prototypeOfObject.__defineGetter__;
+    /* eslint-disable-next-line no-underscore-dangle,no-restricted-properties */
+
+    defineSetter = object_define_property_x_esm_prototypeOfObject.__defineSetter__;
+    /* eslint-disable-next-line no-underscore-dangle */
+
+    object_define_property_x_esm_lookupGetter = object_define_property_x_esm_prototypeOfObject.__lookupGetter__;
+    /* eslint-disable-next-line no-underscore-dangle */
+
+    object_define_property_x_esm_lookupSetter = object_define_property_x_esm_prototypeOfObject.__lookupSetter__;
+  }
+
+  $defineProperty = function defineProperty(object, property, descriptor) {
+    assert_is_object_x_esm(object);
+    var propKey = to_property_key_x_esm(property);
+    var propDesc = toPropertyDescriptor(descriptor); // make a valiant attempt to use the real defineProperty for IE8's DOM elements.
+
+    if (definePropertyFallback) {
+      var result = attempt_x_esm.call(Object, definePropertyFallback, object, propKey, propDesc);
+
+      if (result.threw === false) {
+        return result.value;
+      } // try the shim if the real one doesn't work
+
+    } // If it's a data property.
+
+
+    if (has_own_property_x_esm(propDesc, 'value')) {
+      // fail silently if 'writable', 'enumerable', or 'configurable' are requested but not supported
+      if (object_define_property_x_esm_supportsAccessors && (object_define_property_x_esm_lookupGetter.call(object, propKey) || object_define_property_x_esm_lookupSetter.call(object, propKey))) {
+        // As accessors are supported only on engines implementing
+        // `__proto__` we can safely override `__proto__` while defining
+        // a property to make sure that we don't hit an inherited accessor.
+
+        /* eslint-disable-next-line no-proto */
+        var prototype = object.__proto__;
+        /* eslint-disable-next-line no-proto */
+
+        object.__proto__ = object_define_property_x_esm_prototypeOfObject; // Deleting a property anyway since getter / setter may be defined on object itself.
+
+        delete object[propKey];
+        object[propKey] = propDesc.value; // Setting original `__proto__` back now.
+
+        /* eslint-disable-next-line no-proto */
+
+        object.__proto__ = prototype;
+      } else {
+        object[propKey] = propDesc.value;
+      }
+    } else {
+      if (object_define_property_x_esm_supportsAccessors === false && (propDesc.get || propDesc.set)) {
+        throw new TypeError('getters & setters can not be defined on this javascript engine');
+      } // If we got that far then getters and setters can be defined !!
+
+
+      if (propDesc.get) {
+        defineGetter.call(object, propKey, propDesc.get);
+      }
+
+      if (propDesc.set) {
+        defineSetter.call(object, propKey, propDesc.set);
+      }
+    }
+
+    return object;
+  };
+}
+
+var defProp = $defineProperty;
+/* harmony default export */ var object_define_property_x_esm = (defProp);
+
+
+// CONCATENATED MODULE: ./node_modules/is-regexp-x/dist/is-regexp-x.esm.js
+
+
+
+
+
+
+var regexExec = /none/.exec;
+var regexClass = '[object RegExp]';
+
+var tryRegexExecCall = function tryRegexExec(value, descriptor) {
+  try {
+    value.lastIndex = 0;
+    regexExec.call(value);
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    object_define_property_x_esm(value, 'lastIndex', descriptor);
+  }
+};
+/**
+ * This method tests if a value is a regex.
+ *
+ * @param {*} value - The value to test.
+ * @returns {boolean} `true` if value is a regex; otherwise `false`.
+ */
+
+
+var is_regexp_x_esm_isRegex = function isRegex(value) {
+  if (is_object_like_x_esm(value) === false) {
+    return false;
+  }
+
+  if (has_to_string_tag_x_esm === false) {
+    return to_string_tag_x_esm(value) === regexClass;
+  }
+
+  var descriptor = object_get_own_property_descriptor_x_esm(value, 'lastIndex');
+  var hasLastIndexDataProperty = descriptor && has_own_property_x_esm(descriptor, 'value');
+
+  if (hasLastIndexDataProperty !== true) {
+    return false;
+  }
+
+  return tryRegexExecCall(value, descriptor);
+};
+
+/* harmony default export */ var is_regexp_x_esm = (is_regexp_x_esm_isRegex);
+
 
 // CONCATENATED MODULE: ./node_modules/to-length-x/dist/to-length-x.esm.js
 
@@ -3905,268 +4029,11 @@ var arrayFilter = $filter;
 
 
 // EXTERNAL MODULE: ./node_modules/stable/stable.js
-var stable = __webpack_require__(8);
+var stable = __webpack_require__(7);
 var stable_default = /*#__PURE__*/__webpack_require__.n(stable);
 
-// CONCATENATED MODULE: ./node_modules/assert-is-object-x/dist/assert-is-object-x.esm.js
-
-
-/**
- * Tests `value` to see if it is an object, throws a `TypeError` if it is
- * not. Otherwise returns the `value`.
- *
- * @param {*} value - The argument to be tested.
- * @throws {TypeError} Throws if `value` is not an object.
- * @returns {*} Returns `value` if it is an object.
- */
-
-var assert_is_object_x_esm_assertIsObject = function assertIsObject(value) {
-  if (is_primitive_default()(value)) {
-    throw new TypeError("".concat(to_string_symbols_supported_x_esm(value), " is not an object"));
-  }
-
-  return value;
-};
-
-/* harmony default export */ var assert_is_object_x_esm = (assert_is_object_x_esm_assertIsObject);
-
-
-// CONCATENATED MODULE: ./node_modules/object-define-property-x/dist/object-define-property-x.esm.js
-
-
-
-
-
-
-/** @type {BooleanConstructor} */
-
-var object_define_property_x_esm_castBoolean = true.constructor;
-var nativeDefProp = typeof Object.defineProperty === 'function' && Object.defineProperty;
-var definePropertyFallback;
-
-var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
-  var object = to_object_x_esm(desc);
-  var descriptor = {};
-
-  if (has_own_property_x_esm(object, 'enumerable')) {
-    descriptor.enumerable = object_define_property_x_esm_castBoolean(object.enumerable);
-  }
-
-  if (has_own_property_x_esm(object, 'configurable')) {
-    descriptor.configurable = object_define_property_x_esm_castBoolean(object.configurable);
-  }
-
-  if (has_own_property_x_esm(object, 'value')) {
-    descriptor.value = object.value;
-  }
-
-  if (has_own_property_x_esm(object, 'writable')) {
-    descriptor.writable = object_define_property_x_esm_castBoolean(object.writable);
-  }
-
-  if (has_own_property_x_esm(object, 'get')) {
-    var getter = object.get;
-
-    if (typeof getter !== 'undefined' && is_function_x_esm(getter) === false) {
-      throw new TypeError('getter must be a function');
-    }
-
-    descriptor.get = getter;
-  }
-
-  if (has_own_property_x_esm(object, 'set')) {
-    var setter = object.set;
-
-    if (typeof setter !== 'undefined' && is_function_x_esm(setter) === false) {
-      throw new TypeError('setter must be a function');
-    }
-
-    descriptor.set = setter;
-  }
-
-  if ((has_own_property_x_esm(descriptor, 'get') || has_own_property_x_esm(descriptor, 'set')) && (has_own_property_x_esm(descriptor, 'value') || has_own_property_x_esm(descriptor, 'writable'))) {
-    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
-  }
-
-  return descriptor;
-}; // ES5 15.2.3.6
-// http://es5.github.com/#x15.2.3.6
-// Patch for WebKit and IE8 standard mode
-// Designed by hax <hax.github.com>
-// related issue: https://github.com/es-shims/es5-shim/issues#issue/5
-// IE8 Reference:
-//     http://msdn.microsoft.com/en-us/library/dd282900.aspx
-//     http://msdn.microsoft.com/en-us/library/dd229916.aspx
-// WebKit Bugs:
-//     https://bugs.webkit.org/show_bug.cgi?id=36423
-
-/**
- * This method defines a new property directly on an object, or modifies an
- * existing property on an object, and returns the object.
- *
- * @param {object} object - The object on which to define the property.
- * @param {string} property - The name of the property to be defined or modified.
- * @param {object} descriptor - The descriptor for the property being defined or modified.
- * @returns {object} The object that was passed to the function.
- * });.
- */
-
-
-var $defineProperty; // check whether defineProperty works if it's given. Otherwise, shim partially.
-
-if (nativeDefProp) {
-  var testWorksWith = function _testWorksWith(object) {
-    var testResult = attempt_x_esm(nativeDefProp, object, 'sentinel', {});
-    return testResult.threw === false && testResult.value === object && 'sentinel' in object;
-  };
-
-  var object_define_property_x_esm_doc = typeof document !== 'undefined' && document;
-
-  if (testWorksWith({}) && (object_define_property_x_esm_castBoolean(object_define_property_x_esm_doc) === false || testWorksWith(object_define_property_x_esm_doc.createElement('div')))) {
-    $defineProperty = function defineProperty(object, property, descriptor) {
-      return nativeDefProp(assert_is_object_x_esm(object), to_property_key_x_esm(property), toPropertyDescriptor(descriptor));
-    };
-  } else {
-    definePropertyFallback = nativeDefProp;
-  }
-}
-
-if (object_define_property_x_esm_castBoolean(nativeDefProp) === false || definePropertyFallback) {
-  var object_define_property_x_esm_prototypeOfObject = Object.prototype; // If JS engine supports accessors creating shortcuts.
-
-  var defineGetter;
-  var defineSetter;
-  var object_define_property_x_esm_lookupGetter;
-  var object_define_property_x_esm_lookupSetter;
-  var object_define_property_x_esm_supportsAccessors = has_own_property_x_esm(object_define_property_x_esm_prototypeOfObject, '__defineGetter__');
-
-  if (object_define_property_x_esm_supportsAccessors) {
-    /* eslint-disable-next-line no-underscore-dangle,no-restricted-properties */
-    defineGetter = object_define_property_x_esm_prototypeOfObject.__defineGetter__;
-    /* eslint-disable-next-line no-underscore-dangle,no-restricted-properties */
-
-    defineSetter = object_define_property_x_esm_prototypeOfObject.__defineSetter__;
-    /* eslint-disable-next-line no-underscore-dangle */
-
-    object_define_property_x_esm_lookupGetter = object_define_property_x_esm_prototypeOfObject.__lookupGetter__;
-    /* eslint-disable-next-line no-underscore-dangle */
-
-    object_define_property_x_esm_lookupSetter = object_define_property_x_esm_prototypeOfObject.__lookupSetter__;
-  }
-
-  $defineProperty = function defineProperty(object, property, descriptor) {
-    assert_is_object_x_esm(object);
-    var propKey = to_property_key_x_esm(property);
-    var propDesc = toPropertyDescriptor(descriptor); // make a valiant attempt to use the real defineProperty for IE8's DOM elements.
-
-    if (definePropertyFallback) {
-      var result = attempt_x_esm.call(Object, definePropertyFallback, object, propKey, propDesc);
-
-      if (result.threw === false) {
-        return result.value;
-      } // try the shim if the real one doesn't work
-
-    } // If it's a data property.
-
-
-    if (has_own_property_x_esm(propDesc, 'value')) {
-      // fail silently if 'writable', 'enumerable', or 'configurable' are requested but not supported
-      if (object_define_property_x_esm_supportsAccessors && (object_define_property_x_esm_lookupGetter.call(object, propKey) || object_define_property_x_esm_lookupSetter.call(object, propKey))) {
-        // As accessors are supported only on engines implementing
-        // `__proto__` we can safely override `__proto__` while defining
-        // a property to make sure that we don't hit an inherited accessor.
-
-        /* eslint-disable-next-line no-proto */
-        var prototype = object.__proto__;
-        /* eslint-disable-next-line no-proto */
-
-        object.__proto__ = object_define_property_x_esm_prototypeOfObject; // Deleting a property anyway since getter / setter may be defined on object itself.
-
-        delete object[propKey];
-        object[propKey] = propDesc.value; // Setting original `__proto__` back now.
-
-        /* eslint-disable-next-line no-proto */
-
-        object.__proto__ = prototype;
-      } else {
-        object[propKey] = propDesc.value;
-      }
-    } else {
-      if (object_define_property_x_esm_supportsAccessors === false && (propDesc.get || propDesc.set)) {
-        throw new TypeError('getters & setters can not be defined on this javascript engine');
-      } // If we got that far then getters and setters can be defined !!
-
-
-      if (propDesc.get) {
-        defineGetter.call(object, propKey, propDesc.get);
-      }
-
-      if (propDesc.set) {
-        defineSetter.call(object, propKey, propDesc.set);
-      }
-    }
-
-    return object;
-  };
-}
-
-var defProp = $defineProperty;
-/* harmony default export */ var object_define_property_x_esm = (defProp);
-
-
-// CONCATENATED MODULE: ./node_modules/is-regexp-x/dist/is-regexp-x.esm.js
-
-
-
-
-
-
-var regexExec = /none/.exec;
-var regexClass = '[object RegExp]';
-
-var tryRegexExecCall = function tryRegexExec(value, descriptor) {
-  try {
-    value.lastIndex = 0;
-    regexExec.call(value);
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    object_define_property_x_esm(value, 'lastIndex', descriptor);
-  }
-};
-/**
- * This method tests if a value is a regex.
- *
- * @param {*} value - The value to test.
- * @returns {boolean} `true` if value is a regex; otherwise `false`.
- */
-
-
-var is_regexp_x_esm_isRegex = function isRegex(value) {
-  if (is_object_like_x_esm(value) === false) {
-    return false;
-  }
-
-  if (has_to_string_tag_x_esm === false) {
-    return to_string_tag_x_esm(value) === regexClass;
-  }
-
-  var descriptor = object_get_own_property_descriptor_x_esm(value, 'lastIndex');
-  var hasLastIndexDataProperty = descriptor && has_own_property_x_esm(descriptor, 'value');
-
-  if (hasLastIndexDataProperty !== true) {
-    return false;
-  }
-
-  return tryRegexExecCall(value, descriptor);
-};
-
-/* harmony default export */ var is_regexp_x_esm = (is_regexp_x_esm_isRegex);
-
-
 // EXTERNAL MODULE: ./node_modules/object-keys/index.js
-var object_keys = __webpack_require__(10);
+var object_keys = __webpack_require__(9);
 var object_keys_default = /*#__PURE__*/__webpack_require__.n(object_keys);
 
 // CONCATENATED MODULE: ./node_modules/object-keys-x/dist/object-keys-x.esm.js
@@ -4409,7 +4276,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
 
 
-  if (is_regex_default()(actual) && is_regex_default()(expected)) {
+  if (is_regexp_x_esm(actual) && is_regexp_x_esm(expected)) {
     return actual.toString() === expected.toString() && actual.lastIndex === expected.lastIndex;
   } // 7.4. Other pairs that do not both pass typeof value == 'object',
   // equivalence is determined by == or strict ===.

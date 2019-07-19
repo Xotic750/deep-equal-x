@@ -8,7 +8,7 @@ import isError from 'is-error-x';
 import isMap from 'is-map-x';
 import isSet from 'is-set-x';
 import isNil from 'is-nil-x';
-import isRegExp from 'is-regex';
+import isRegExp from 'is-regexp-x';
 import indexOf from 'index-of-x';
 import slice from 'array-slice-x';
 import some from 'array-some-x';
