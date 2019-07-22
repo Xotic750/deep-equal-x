@@ -1,13 +1,13 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-21T23:34:01.362Z",
+  "date": "2019-07-22T13:35:36.736Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
   "hash": "6658b371397451fe69f9",
   "license": "MIT",
-  "version": "2.0.3"
+  "version": "2.0.4"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
