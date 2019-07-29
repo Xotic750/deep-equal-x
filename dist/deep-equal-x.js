@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-27T22:16:58.089Z",
+  "date": "2019-07-29T13:30:29.820Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "02a40de86a57f31e24de",
+  "hash": "bb9c1719c20913e35c06",
   "license": "MIT",
   "version": "2.0.9"
 }
@@ -3942,6 +3942,7 @@ var ok = objectKeys;
 
 
 
+
  // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
 
@@ -3975,7 +3976,7 @@ var maxSafeIndex = 4294967295; // (2^32)-1
  * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
  */
 
-var deep_equal_x_esm_isIndex = function _isIndex(value) {
+var deep_equal_x_esm_isIndex = function isIndex(value) {
   var num = indexNotFound;
 
   if (deep_equal_x_esm_reIsUint.test(value)) {
@@ -3983,7 +3984,9 @@ var deep_equal_x_esm_isIndex = function _isIndex(value) {
   }
 
   return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
-};
+}; // eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Get an object's key avoiding boxed string bug. Specifically for boxed
  * string bug fix and not general purpose.
@@ -3995,9 +3998,18 @@ var deep_equal_x_esm_isIndex = function _isIndex(value) {
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
+// eslint-enable jsdoc/require-param
 
 
-var getItem = function _getItem(object, key, isStr, isIdx) {
+var getItem = function getItem() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var object = args[0],
+      key = args[1],
+      isStr = args[2],
+      isIdx = args[3];
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
 /**
@@ -4011,11 +4023,13 @@ var getItem = function _getItem(object, key, isStr, isIdx) {
  */
 
 
-var filterUnwanted = function _filterUnwanted(keys, unwanted) {
-  return unwanted.length ? array_filter_x_esm(keys, function _filter(key) {
+var deep_equal_x_esm_filterUnwanted = function filterUnwanted(keys, unwanted) {
+  return unwanted.length ? array_filter_x_esm(keys, function predicate(key) {
     return index_of_x_esm(unwanted, key) === indexNotFound;
   }) : keys;
-};
+}; // eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -4032,16 +4046,25 @@ var filterUnwanted = function _filterUnwanted(keys, unwanted) {
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  */
+// eslint-enable jsdoc/require-param
 
 
-var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousStack) {
-  // 7.1. All identical values are equivalent, as determined by ===.
+var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  var actual = args[0],
+      expected = args[1],
+      strict = args[2],
+      previousStack = args[3]; // 7.1. All identical values are equivalent, as determined by ===.
+
   if (actual === expected) {
     return true;
   }
 
   if (is_buffer_default()(actual) && is_buffer_default()(expected)) {
-    return actual.length === expected.length && array_some_x_esm(actual, function _some1(item, index) {
+    return actual.length === expected.length && array_some_x_esm(actual, function predicate(item, index) {
       return item !== expected[index];
     }) === false;
   } // 7.2. If the expected value is a Date object, the actual value is
@@ -4121,21 +4144,21 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
 
   if (is_object_default()(actual)) {
     if (is_error_x_esm(actual)) {
-      ka = filterUnwanted(ka, hasErrorEnumerables);
+      ka = deep_equal_x_esm_filterUnwanted(ka, hasErrorEnumerables);
     } else if (is_map_x_esm(actual)) {
-      ka = filterUnwanted(ka, hasMapEnumerables);
+      ka = deep_equal_x_esm_filterUnwanted(ka, hasMapEnumerables);
     } else if (is_set_x_esm(actual)) {
-      ka = filterUnwanted(ka, hasSetEnumerables);
+      ka = deep_equal_x_esm_filterUnwanted(ka, hasSetEnumerables);
     }
   }
 
   if (is_object_default()(expected)) {
     if (is_error_x_esm(expected)) {
-      kb = filterUnwanted(kb, hasErrorEnumerables);
+      kb = deep_equal_x_esm_filterUnwanted(kb, hasErrorEnumerables);
     } else if (is_map_x_esm(expected)) {
-      kb = filterUnwanted(kb, hasMapEnumerables);
+      kb = deep_equal_x_esm_filterUnwanted(kb, hasMapEnumerables);
     } else if (is_set_x_esm(expected)) {
-      kb = filterUnwanted(kb, hasSetEnumerables);
+      kb = deep_equal_x_esm_filterUnwanted(kb, hasSetEnumerables);
     }
   } // the same set of keys (although not necessarily the same order),
 
@@ -4153,7 +4176,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // ~~~possibly expensive deep test
 
 
-  return array_some_x_esm(ka, function _some2(key, index) {
+  return array_some_x_esm(ka, function predicate(key, index) {
     if (key !== kb[index]) {
       return true;
     }
@@ -4179,7 +4202,9 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
 
     return result;
   }) === false;
-};
+}; // eslint-enable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -4195,13 +4220,15 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
  */
+// eslint-disable jsdoc/require-param
 
 
-var deepEqual = function deepEqual(actual, expected, strict) {
-  return baseDeepEqual(actual, expected, strict);
+var deep_equal_x_esm_deepEqual = function deepEqual(actual, expected) {
+  /* eslint-disable-next-line prefer-rest-params */
+  return deep_equal_x_esm_baseDeepEqual(actual, expected, to_boolean_x_esm(arguments[2]));
 };
 
-/* harmony default export */ var deep_equal_x_esm = __webpack_exports__["default"] = (deepEqual);
+/* harmony default export */ var deep_equal_x_esm = __webpack_exports__["default"] = (deep_equal_x_esm_deepEqual);
 
 
 

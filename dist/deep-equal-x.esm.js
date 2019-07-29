@@ -16,7 +16,8 @@ import filter from 'array-filter-x';
 import sort from 'stable';
 import $keys from 'object-keys-x';
 import $getPrototypeOf from 'get-prototype-of-x';
-import hasBoxedString from 'has-boxed-string-x'; // Check failure of by-index access of string characters (IE < 9)
+import hasBoxedString from 'has-boxed-string-x';
+import toBoolean from 'to-boolean-x'; // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
 
 var hasBoxedStringBug = hasBoxedString === false; // Used to detect unsigned integer values.
@@ -49,7 +50,7 @@ var maxSafeIndex = 4294967295; // (2^32)-1
  * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
  */
 
-var isIndex = function _isIndex(value) {
+var isIndex = function isIndex(value) {
   var num = indexNotFound;
 
   if (reIsUint.test(value)) {
@@ -57,7 +58,9 @@ var isIndex = function _isIndex(value) {
   }
 
   return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
-};
+}; // eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Get an object's key avoiding boxed string bug. Specifically for boxed
  * string bug fix and not general purpose.
@@ -69,9 +72,18 @@ var isIndex = function _isIndex(value) {
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
+// eslint-enable jsdoc/require-param
 
 
-var getItem = function _getItem(object, key, isStr, isIdx) {
+var getItem = function getItem() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  var object = args[0],
+      key = args[1],
+      isStr = args[2],
+      isIdx = args[3];
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
 /**
@@ -85,11 +97,13 @@ var getItem = function _getItem(object, key, isStr, isIdx) {
  */
 
 
-var filterUnwanted = function _filterUnwanted(keys, unwanted) {
-  return unwanted.length ? filter(keys, function _filter(key) {
+var filterUnwanted = function filterUnwanted(keys, unwanted) {
+  return unwanted.length ? filter(keys, function predicate(key) {
     return indexOf(unwanted, key) === indexNotFound;
   }) : keys;
-};
+}; // eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -106,16 +120,25 @@ var filterUnwanted = function _filterUnwanted(keys, unwanted) {
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  */
+// eslint-enable jsdoc/require-param
 
 
-var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousStack) {
-  // 7.1. All identical values are equivalent, as determined by ===.
+var baseDeepEqual = function baseDeepEqual() {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  var actual = args[0],
+      expected = args[1],
+      strict = args[2],
+      previousStack = args[3]; // 7.1. All identical values are equivalent, as determined by ===.
+
   if (actual === expected) {
     return true;
   }
 
   if (isBuffer(actual) && isBuffer(expected)) {
-    return actual.length === expected.length && some(actual, function _some1(item, index) {
+    return actual.length === expected.length && some(actual, function predicate(item, index) {
       return item !== expected[index];
     }) === false;
   } // 7.2. If the expected value is a Date object, the actual value is
@@ -227,7 +250,7 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
   // ~~~possibly expensive deep test
 
 
-  return some(ka, function _some2(key, index) {
+  return some(ka, function predicate(key, index) {
     if (key !== kb[index]) {
       return true;
     }
@@ -253,7 +276,9 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
 
     return result;
   }) === false;
-};
+}; // eslint-enable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
+
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -269,10 +294,12 @@ var baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousSt
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
  */
+// eslint-disable jsdoc/require-param
 
 
-var deepEqual = function deepEqual(actual, expected, strict) {
-  return baseDeepEqual(actual, expected, strict);
+var deepEqual = function deepEqual(actual, expected) {
+  /* eslint-disable-next-line prefer-rest-params */
+  return baseDeepEqual(actual, expected, toBoolean(arguments[2]));
 };
 
 export default deepEqual;

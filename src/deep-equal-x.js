@@ -17,6 +17,7 @@ import sort from 'stable';
 import $keys from 'object-keys-x';
 import $getPrototypeOf from 'get-prototype-of-x';
 import hasBoxedString from 'has-boxed-string-x';
+import toBoolean from 'to-boolean-x';
 
 // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
@@ -47,7 +48,7 @@ const maxSafeIndex = 4294967295; // (2^32)-1
  * @param {*} value - The value to check.
  * @returns {boolean} Returns `true` if `value` is valid index, else `false`.
  */
-const isIndex = function _isIndex(value) {
+const isIndex = function isIndex(value) {
   let num = indexNotFound;
 
   if (reIsUint.test(value)) {
@@ -57,6 +58,8 @@ const isIndex = function _isIndex(value) {
   return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
 };
 
+// eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
 /**
  * Get an object's key avoiding boxed string bug. Specifically for boxed
  * string bug fix and not general purpose.
@@ -68,7 +71,10 @@ const isIndex = function _isIndex(value) {
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
-const getItem = function _getItem(object, key, isStr, isIdx) {
+// eslint-enable jsdoc/require-param
+const getItem = function getItem(...args) {
+  const [object, key, isStr, isIdx] = args;
+
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
 
@@ -81,14 +87,16 @@ const getItem = function _getItem(object, key, isStr, isIdx) {
  * @param {Array} unwanted - The unwanted keys.
  * @returns {Array} Returns the filtered keys.
  */
-const filterUnwanted = function _filterUnwanted(keys, unwanted) {
+const filterUnwanted = function filterUnwanted(keys, unwanted) {
   return unwanted.length
-    ? filter(keys, function _filter(key) {
+    ? filter(keys, function predicate(key) {
         return indexOf(unwanted, key) === indexNotFound;
       })
     : keys;
 };
 
+// eslint-disable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -105,7 +113,10 @@ const filterUnwanted = function _filterUnwanted(keys, unwanted) {
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
  *  otherwise `false`.
  */
-const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previousStack) {
+// eslint-enable jsdoc/require-param
+const baseDeepEqual = function baseDeepEqual(...args) {
+  const [actual, expected, strict, previousStack] = args;
+
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {
     return true;
@@ -114,7 +125,7 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
   if (isBuffer(actual) && isBuffer(expected)) {
     return (
       actual.length === expected.length &&
-      some(actual, function _some1(item, index) {
+      some(actual, function predicate(item, index) {
         return item !== expected[index];
       }) === false
     );
@@ -227,7 +238,7 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
   // equivalent values for every corresponding key, and
   // ~~~possibly expensive deep test
   return (
-    some(ka, function _some2(key, index) {
+    some(ka, function predicate(key, index) {
       if (key !== kb[index]) {
         return true;
       }
@@ -256,6 +267,8 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
   );
 };
 
+// eslint-enable jsdoc/require-param
+// noinspection JSCommentMatchesSignature
 /**
  * Tests for deep equality. Primitive values are compared with the equal
  * comparison operator ( == ). This only considers enumerable properties.
@@ -271,8 +284,10 @@ const baseDeepEqual = function _baseDeepEqual(actual, expected, strict, previous
  *  otherwise `false`.
  * @see https://nodejs.org/api/assert.html
  */
-const deepEqual = function deepEqual(actual, expected, strict) {
-  return baseDeepEqual(actual, expected, strict);
+// eslint-disable jsdoc/require-param
+const deepEqual = function deepEqual(actual, expected) {
+  /* eslint-disable-next-line prefer-rest-params */
+  return baseDeepEqual(actual, expected, toBoolean(arguments[2]));
 };
 
 export default deepEqual;
