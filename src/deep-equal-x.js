@@ -72,8 +72,9 @@ const isIndex = function isIndex(value) {
  * @returns {*} Returns the `value` referenced by the `key`.
  */
 // eslint-enable jsdoc/require-param
-const getItem = function getItem(...args) {
-  const [object, key, isStr, isIdx] = args;
+const getItem = function getItem() {
+  /* eslint-disable-next-line prefer-rest-params */
+  const [object, key, isStr, isIdx] = slice(arguments);
 
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
@@ -114,8 +115,9 @@ const filterUnwanted = function filterUnwanted(keys, unwanted) {
  *  otherwise `false`.
  */
 // eslint-enable jsdoc/require-param
-const baseDeepEqual = function baseDeepEqual(...args) {
-  const [actual, expected, strict, previousStack] = args;
+const baseDeepEqual = function baseDeepEqual() {
+  /* eslint-disable-next-line prefer-rest-params */
+  const [actual, expected, strict, previousStack] = slice(arguments);
 
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {

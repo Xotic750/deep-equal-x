@@ -1,3 +1,11 @@
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 import isDate from 'is-date-object';
 import isArguments from 'is-arguments';
 import isPrimitive from 'is-primitive';
@@ -76,14 +84,14 @@ var isIndex = function isIndex(value) {
 
 
 var getItem = function getItem() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
+  /* eslint-disable-next-line prefer-rest-params */
+  var _slice = slice(arguments),
+      _slice2 = _slicedToArray(_slice, 4),
+      object = _slice2[0],
+      key = _slice2[1],
+      isStr = _slice2[2],
+      isIdx = _slice2[3];
 
-  var object = args[0],
-      key = args[1],
-      isStr = args[2],
-      isIdx = args[3];
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
 /**
@@ -124,14 +132,14 @@ var filterUnwanted = function filterUnwanted(keys, unwanted) {
 
 
 var baseDeepEqual = function baseDeepEqual() {
-  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
+  /* eslint-disable-next-line prefer-rest-params */
+  var _slice3 = slice(arguments),
+      _slice4 = _slicedToArray(_slice3, 4),
+      actual = _slice4[0],
+      expected = _slice4[1],
+      strict = _slice4[2],
+      previousStack = _slice4[3]; // 7.1. All identical values are equivalent, as determined by ===.
 
-  var actual = args[0],
-      expected = args[1],
-      strict = args[2],
-      previousStack = args[3]; // 7.1. All identical values are equivalent, as determined by ===.
 
   if (actual === expected) {
     return true;
