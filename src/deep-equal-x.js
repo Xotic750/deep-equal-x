@@ -72,9 +72,8 @@ const isIndex = function isIndex(value) {
  * @returns {*} Returns the `value` referenced by the `key`.
  */
 // eslint-enable jsdoc/require-param
-const getItem = function getItem() {
-  /* eslint-disable-next-line prefer-rest-params */
-  const [object, key, isStr, isIdx] = slice(arguments);
+const getItem = function getItem(args) {
+  const [object, key, isStr, isIdx] = args;
 
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
@@ -115,9 +114,8 @@ const filterUnwanted = function filterUnwanted(keys, unwanted) {
  *  otherwise `false`.
  */
 // eslint-enable jsdoc/require-param
-const baseDeepEqual = function baseDeepEqual() {
-  /* eslint-disable-next-line prefer-rest-params */
-  const [actual, expected, strict, previousStack] = slice(arguments);
+const baseDeepEqual = function baseDeepEqual(args) {
+  const [actual, expected, strict, previousStack] = args;
 
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {
@@ -194,7 +192,7 @@ const baseDeepEqual = function baseDeepEqual() {
       return false;
     }
 
-    return baseDeepEqual(slice(actual), slice(expected), strict, null);
+    return baseDeepEqual([slice(actual), slice(expected), strict, null]);
   }
 
   ka = $keys(actual);
@@ -247,7 +245,7 @@ const baseDeepEqual = function baseDeepEqual() {
 
       const isIdx = (aIsString || bIsString) && isIndex(key);
       const stack = previousStack || [actual];
-      const item = getItem(actual, key, aIsString, isIdx);
+      const item = getItem([actual, key, aIsString, isIdx]);
       const isPrim = isPrimitive(item);
 
       if (isPrim === false) {
@@ -258,7 +256,7 @@ const baseDeepEqual = function baseDeepEqual() {
         stack.push(item);
       }
 
-      const result = baseDeepEqual(item, getItem(expected, key, bIsString, isIdx), strict, stack) === false;
+      const result = baseDeepEqual([item, getItem([expected, key, bIsString, isIdx]), strict, stack]) === false;
 
       if (isPrim === false) {
         stack.pop();
@@ -289,7 +287,7 @@ const baseDeepEqual = function baseDeepEqual() {
 // eslint-disable jsdoc/require-param
 const deepEqual = function deepEqual(actual, expected) {
   /* eslint-disable-next-line prefer-rest-params */
-  return baseDeepEqual(actual, expected, toBoolean(arguments[2]));
+  return baseDeepEqual([actual, expected, toBoolean(arguments[2])]);
 };
 
 export default deepEqual;

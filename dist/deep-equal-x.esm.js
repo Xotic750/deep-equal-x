@@ -83,14 +83,12 @@ var isIndex = function isIndex(value) {
 // eslint-enable jsdoc/require-param
 
 
-var getItem = function getItem() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice = slice(arguments),
-      _slice2 = _slicedToArray(_slice, 4),
-      object = _slice2[0],
-      key = _slice2[1],
-      isStr = _slice2[2],
-      isIdx = _slice2[3];
+var getItem = function getItem(args) {
+  var _args = _slicedToArray(args, 4),
+      object = _args[0],
+      key = _args[1],
+      isStr = _args[2],
+      isIdx = _args[3];
 
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
@@ -131,14 +129,12 @@ var filterUnwanted = function filterUnwanted(keys, unwanted) {
 // eslint-enable jsdoc/require-param
 
 
-var baseDeepEqual = function baseDeepEqual() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice3 = slice(arguments),
-      _slice4 = _slicedToArray(_slice3, 4),
-      actual = _slice4[0],
-      expected = _slice4[1],
-      strict = _slice4[2],
-      previousStack = _slice4[3]; // 7.1. All identical values are equivalent, as determined by ===.
+var baseDeepEqual = function baseDeepEqual(args) {
+  var _args2 = _slicedToArray(args, 4),
+      actual = _args2[0],
+      expected = _args2[1],
+      strict = _args2[2],
+      previousStack = _args2[3]; // 7.1. All identical values are equivalent, as determined by ===.
 
 
   if (actual === expected) {
@@ -214,7 +210,7 @@ var baseDeepEqual = function baseDeepEqual() {
       return false;
     }
 
-    return baseDeepEqual(slice(actual), slice(expected), strict, null);
+    return baseDeepEqual([slice(actual), slice(expected), strict, null]);
   }
 
   ka = $keys(actual);
@@ -265,7 +261,7 @@ var baseDeepEqual = function baseDeepEqual() {
 
     var isIdx = (aIsString || bIsString) && isIndex(key);
     var stack = previousStack || [actual];
-    var item = getItem(actual, key, aIsString, isIdx);
+    var item = getItem([actual, key, aIsString, isIdx]);
     var isPrim = isPrimitive(item);
 
     if (isPrim === false) {
@@ -276,7 +272,7 @@ var baseDeepEqual = function baseDeepEqual() {
       stack.push(item);
     }
 
-    var result = baseDeepEqual(item, getItem(expected, key, bIsString, isIdx), strict, stack) === false;
+    var result = baseDeepEqual([item, getItem([expected, key, bIsString, isIdx]), strict, stack]) === false;
 
     if (isPrim === false) {
       stack.pop();
@@ -307,7 +303,7 @@ var baseDeepEqual = function baseDeepEqual() {
 
 var deepEqual = function deepEqual(actual, expected) {
   /* eslint-disable-next-line prefer-rest-params */
-  return baseDeepEqual(actual, expected, toBoolean(arguments[2]));
+  return baseDeepEqual([actual, expected, toBoolean(arguments[2])]);
 };
 
 export default deepEqual;

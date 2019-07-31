@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-07-29T20:18:57.999Z",
+  "date": "2019-07-31T00:29:04.210Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "aaeed8fcccad2138ad05",
+  "hash": "a53fa113fca87c57b29d",
   "license": "MIT",
   "version": "2.0.9"
 }
@@ -4009,14 +4009,12 @@ var deep_equal_x_esm_isIndex = function isIndex(value) {
 // eslint-enable jsdoc/require-param
 
 
-var deep_equal_x_esm_getItem = function getItem() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice = array_slice_x_esm(arguments),
-      _slice2 = _slicedToArray(_slice, 4),
-      object = _slice2[0],
-      key = _slice2[1],
-      isStr = _slice2[2],
-      isIdx = _slice2[3];
+var getItem = function getItem(args) {
+  var _args = _slicedToArray(args, 4),
+      object = _args[0],
+      key = _args[1],
+      isStr = _args[2],
+      isIdx = _args[3];
 
   return isStr && isIdx ? object.charAt(key) : object[key];
 };
@@ -4057,14 +4055,12 @@ var deep_equal_x_esm_filterUnwanted = function filterUnwanted(keys, unwanted) {
 // eslint-enable jsdoc/require-param
 
 
-var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
-  /* eslint-disable-next-line prefer-rest-params */
-  var _slice3 = array_slice_x_esm(arguments),
-      _slice4 = _slicedToArray(_slice3, 4),
-      actual = _slice4[0],
-      expected = _slice4[1],
-      strict = _slice4[2],
-      previousStack = _slice4[3]; // 7.1. All identical values are equivalent, as determined by ===.
+var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual(args) {
+  var _args2 = _slicedToArray(args, 4),
+      actual = _args2[0],
+      expected = _args2[1],
+      strict = _args2[2],
+      previousStack = _args2[3]; // 7.1. All identical values are equivalent, as determined by ===.
 
 
   if (actual === expected) {
@@ -4140,7 +4136,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
       return false;
     }
 
-    return baseDeepEqual(array_slice_x_esm(actual), array_slice_x_esm(expected), strict, null);
+    return baseDeepEqual([array_slice_x_esm(actual), array_slice_x_esm(expected), strict, null]);
   }
 
   ka = object_keys_x_esm(actual);
@@ -4191,7 +4187,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
 
     var isIdx = (aIsString || bIsString) && deep_equal_x_esm_isIndex(key);
     var stack = previousStack || [actual];
-    var item = deep_equal_x_esm_getItem(actual, key, aIsString, isIdx);
+    var item = getItem([actual, key, aIsString, isIdx]);
     var isPrim = is_primitive_default()(item);
 
     if (isPrim === false) {
@@ -4202,7 +4198,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
       stack.push(item);
     }
 
-    var result = baseDeepEqual(item, deep_equal_x_esm_getItem(expected, key, bIsString, isIdx), strict, stack) === false;
+    var result = baseDeepEqual([item, getItem([expected, key, bIsString, isIdx]), strict, stack]) === false;
 
     if (isPrim === false) {
       stack.pop();
@@ -4233,7 +4229,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual() {
 
 var deep_equal_x_esm_deepEqual = function deepEqual(actual, expected) {
   /* eslint-disable-next-line prefer-rest-params */
-  return deep_equal_x_esm_baseDeepEqual(actual, expected, to_boolean_x_esm(arguments[2]));
+  return deep_equal_x_esm_baseDeepEqual([actual, expected, to_boolean_x_esm(arguments[2])]);
 };
 
 /* harmony default export */ var deep_equal_x_esm = __webpack_exports__["default"] = (deep_equal_x_esm_deepEqual);
