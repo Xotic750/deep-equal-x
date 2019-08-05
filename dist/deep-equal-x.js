@@ -1,13 +1,13 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-05T20:43:37.268Z",
+  "date": "2019-08-05T21:51:56.238Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "3a532733f2fc46f4f7c6",
+  "hash": "305372cc20f227385803",
   "license": "MIT",
-  "version": "2.0.12"
+  "version": "2.0.13"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -3377,41 +3377,28 @@ var index_of_x_esm_indexOf = function indexOf(array, searchElement) {
 
 
 // CONCATENATED MODULE: ./node_modules/is-array-x/dist/is-array-x.esm.js
-var is_array_x_esm_this = undefined;
-
-function is_array_x_esm_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
 
 
-
-var nativeIsArray = [].isArray;
-var isArrayNative = typeof nativeIsArray === 'function' && nativeIsArray;
-var testRes = isArrayNative && attempt_x_esm(function () {
-  is_array_x_esm_newArrowCheck(this, is_array_x_esm_this);
-
-  return isArrayNative([]) === true && isArrayNative({
+var nia = [].isArray;
+var nativeIsArray = typeof nia === 'function' && nia;
+var is_array_x_esm_testResult = attempt_x_esm(function attemptee() {
+  return nativeIsArray([]) === true && nativeIsArray({
     length: 0
   }) === false;
-}.bind(undefined));
+});
+var is_array_x_esm_isWorking = is_array_x_esm_testResult.threw === false && is_array_x_esm_testResult.value === true;
+var is_array_x_esm_implementation = function isArray(value) {
+  return to_string_tag_x_esm(value) === '[object Array]';
+};
+/**
+ * Determines whether the passed value is an Array.
+ *
+ * @param {*} value - The value to test.
+ * @returns {boolean} - True if an array; otherwise false.
+ */
 
-var isArrayFn = function iife() {
-  if (testRes && testRes.threw === false && testRes.value === true) {
-    return isArrayNative;
-  }
-  /**
-   * The isArray() function determines whether the passed value is an Array.
-   *
-   * @function isArray
-   * @param {*} [value] - The object to be checked..
-   * @returns {boolean} `true` if the object is an Array; otherwise, `false`.
-   */
-
-
-  return function isArray(value) {
-    return to_string_tag_x_esm(value) === '[object Array]';
-  };
-}();
-
-/* harmony default export */ var is_array_x_esm = (isArrayFn);
+var is_array_x_esm_isArray = is_array_x_esm_isWorking ? nativeIsArray : is_array_x_esm_implementation;
+/* harmony default export */ var is_array_x_esm = (is_array_x_esm_isArray);
 
 
 // CONCATENATED MODULE: ./node_modules/array-like-slice-x/dist/array-like-slice-x.esm.js
