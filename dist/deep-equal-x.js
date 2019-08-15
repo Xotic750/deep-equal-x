@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-14T19:45:53.664Z",
+  "date": "2019-08-15T20:55:53.754Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "e9395b677697ff62f082",
+  "hash": "32c272310626f0771322",
   "license": "MIT",
   "version": "2.1.0"
 }
@@ -753,9 +753,21 @@ var is_date_object_default = /*#__PURE__*/__webpack_require__.n(is_date_object);
 var is_arguments = __webpack_require__(3);
 var is_arguments_default = /*#__PURE__*/__webpack_require__.n(is_arguments);
 
-// EXTERNAL MODULE: ./node_modules/is-primitive/index.js
-var is_primitive = __webpack_require__(0);
-var is_primitive_default = /*#__PURE__*/__webpack_require__.n(is_primitive);
+// CONCATENATED MODULE: ./node_modules/is-primitive-x/dist/is-primitive-x.esm.js
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/**
+ * Returns true if the value is a primitive.
+ *
+ * @param {*} [val] - The value to test.
+ * @returns {boolean} True if a primitive, otherwise false..
+ */
+var isPrimitive = function isPrimitive(val) {
+  return _typeof(val) === 'object' ? val === null : typeof val !== 'function';
+};
+
+/* harmony default export */ var is_primitive_x_esm = (isPrimitive);
+
 
 // EXTERNAL MODULE: ./node_modules/is-object/index.js
 var is_object = __webpack_require__(5);
@@ -882,6 +894,10 @@ var hasSymbolSupport = attempt_x_esm(function () {
 /* eslint-disable-next-line compat/compat */
 is_symbol_default()(Symbol.toStringTag));
 
+
+// EXTERNAL MODULE: ./node_modules/is-primitive/index.js
+var is_primitive = __webpack_require__(0);
+var is_primitive_default = /*#__PURE__*/__webpack_require__.n(is_primitive);
 
 // CONCATENATED MODULE: ./node_modules/is-nil-x/dist/is-nil-x.esm.js
 /**
@@ -1791,7 +1807,7 @@ var to_primitive_x_esm_toPrimitive = function toPrimitive(input, preferredType) 
 
 
 // CONCATENATED MODULE: ./node_modules/to-property-key-x/dist/to-property-key-x.esm.js
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function to_property_key_x_esm_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { to_property_key_x_esm_typeof = function _typeof(obj) { return typeof obj; }; } else { to_property_key_x_esm_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return to_property_key_x_esm_typeof(obj); }
 
 
 
@@ -1806,7 +1822,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 var to_property_key_x_esm_toPropertyKey = function toPropertyKey(argument) {
   var key = to_primitive_x_esm(argument, String);
-  return has_symbol_support_x_esm && _typeof(key) === 'symbol' ? key : to_string_x_esm(key);
+  return has_symbol_support_x_esm && to_property_key_x_esm_typeof(key) === 'symbol' ? key : to_string_x_esm(key);
 };
 
 /* harmony default export */ var to_property_key_x_esm = (to_property_key_x_esm_toPropertyKey);
@@ -4337,7 +4353,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual(args) {
   } // if one is actual primitive, the other must be same
 
 
-  if (is_primitive_default()(actual) || is_primitive_default()(expected)) {
+  if (is_primitive_x_esm(actual) || is_primitive_x_esm(expected)) {
     return actual === expected;
   }
 
@@ -4407,7 +4423,7 @@ var deep_equal_x_esm_baseDeepEqual = function baseDeepEqual(args) {
     var isIdx = (aIsString || bIsString) && deep_equal_x_esm_isIndex(key);
     var stack = previousStack || [actual];
     var item = getItem([actual, key, aIsString, isIdx]);
-    var isPrim = is_primitive_default()(item);
+    var isPrim = is_primitive_x_esm(item);
 
     if (isPrim === false) {
       if (index_of_x_esm(stack, item) !== indexNotFound) {

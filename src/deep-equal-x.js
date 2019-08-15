@@ -1,6 +1,6 @@
 import isDate from 'is-date-object';
 import isArguments from 'is-arguments';
-import isPrimitive from 'is-primitive';
+import isPrimitive from 'is-primitive-x';
 import isObject from 'is-object';
 import isBuffer from 'is-buffer';
 import isString from 'is-string';
