@@ -1,7 +1,7 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-08-15T20:55:53.754Z",
+  "date": "2019-08-16T23:35:02.609Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
