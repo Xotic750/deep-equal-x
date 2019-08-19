@@ -25,12 +25,21 @@ import sort from 'stable';
 import $keys from 'object-keys-x';
 import $getPrototypeOf from 'get-prototype-of-x';
 import hasBoxedString from 'has-boxed-string-x';
-import toBoolean from 'to-boolean-x'; // Check failure of by-index access of string characters (IE < 9)
+import toBoolean from 'to-boolean-x';
+import methodize from 'simple-methodize-x';
+import toNumber from 'to-number-x'; // Check failure of by-index access of string characters (IE < 9)
 // and failure of `0 in boxedString` (Rhino)
 
 var hasBoxedStringBug = hasBoxedString === false; // Used to detect unsigned integer values.
 
 var reIsUint = /^(?:0|[1-9]\d*)$/;
+var methodizedTest = methodize(reIsUint.test);
+var methodizedRxToString = methodize(reIsUint.toString);
+var getTime = methodize(Date.prototype.getTime);
+var charAt = methodize(''.charAt);
+var tempArray = [];
+var push = methodize(tempArray.push);
+var pop = methodize(tempArray.pop);
 /* eslint-disable-next-line compat/compat */
 
 var hasMapEnumerables = typeof Map === 'function' ? $keys(new Map()) : [];
@@ -61,8 +70,8 @@ var maxSafeIndex = 4294967295; // (2^32)-1
 var isIndex = function isIndex(value) {
   var num = indexNotFound;
 
-  if (reIsUint.test(value)) {
-    num = Number(value);
+  if (methodizedTest(reIsUint, value)) {
+    num = toNumber(value);
   }
 
   return num > indexNotFound && num % 1 === 0 && num < maxSafeIndex;
@@ -90,7 +99,7 @@ var getItem = function getItem(args) {
       isStr = _args[2],
       isIdx = _args[3];
 
-  return isStr && isIdx ? object.charAt(key) : object[key];
+  return isStr && isIdx ? charAt(key, object) : object[key];
 };
 /**
  * Filter `keys` of unwanted Error enumerables. Specifically for Error has
@@ -150,14 +159,14 @@ var baseDeepEqual = function baseDeepEqual(args) {
 
 
   if (isDate(actual) && isDate(expected)) {
-    return actual.getTime() === expected.getTime();
+    return getTime(actual) === getTime(expected);
   } // 7.3 If the expected value is a RegExp object, the actual value is
   // equivalent if it is also a RegExp object with the same `source` and
   // properties (`global`, `multiline`, `lastIndex`, `ignoreCase` & `sticky`).
 
 
   if (isRegExp(actual) && isRegExp(expected)) {
-    return actual.toString() === expected.toString() && actual.lastIndex === expected.lastIndex;
+    return methodizedRxToString(actual) === methodizedRxToString(expected) && actual.lastIndex === expected.lastIndex;
   } // 7.4. Other pairs that do not both pass typeof value == 'object',
   // equivalence is determined by == or strict ===.
 
@@ -269,13 +278,13 @@ var baseDeepEqual = function baseDeepEqual(args) {
         throw new RangeError('Circular object');
       }
 
-      stack.push(item);
+      push(stack, item);
     }
 
     var result = baseDeepEqual([item, getItem([expected, key, bIsString, isIdx]), strict, stack]) === false;
 
     if (isPrim === false) {
-      stack.pop();
+      pop(stack);
     }
 
     return result;

@@ -67,8 +67,10 @@
     "is-set-x": "^2.1.0",
     "is-string": "^1.0.4",
     "object-keys-x": "^3.1.0",
+    "simple-methodize-x": "^1.0.2",
     "stable": "^0.1.8",
-    "to-boolean-x": "^2.1.0"
+    "to-boolean-x": "^2.1.0",
+    "to-number-x": "^3.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
