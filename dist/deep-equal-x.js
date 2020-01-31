@@ -1,11 +1,11 @@
 /*!
 {
   "copywrite": "Copyright (c) 2015-2017",
-  "date": "2019-09-05T20:41:41.742Z",
+  "date": "2020-01-31T11:05:20.296Z",
   "describe": "",
   "description": "node's deepEqual and deepStrictEqual algorithm.",
   "file": "deep-equal-x.js",
-  "hash": "cfa0d4d133dffa8cf2ac",
+  "hash": "84594e3008249606b6a9",
   "license": "MIT",
   "version": "2.1.2"
 }
@@ -4519,7 +4519,7 @@ function deep_equal_x_esm_slicedToArray(arr, i) { return deep_equal_x_esm_arrayW
 
 function deep_equal_x_esm_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function deep_equal_x_esm_iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function deep_equal_x_esm_iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function deep_equal_x_esm_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -4603,6 +4603,7 @@ var deep_equal_x_esm_isIndex = function isIndex(value) {
  * @param {Array|string|object} object - The object to get the `value` from.
  * @param {string|number} key - The `key` reference to the `value`.
  * @param {boolean} isStr - Is the object a string.
+ * @param args
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
@@ -4648,9 +4649,10 @@ var deep_equal_x_esm_filterUnwanted = function filterUnwanted(keys, unwanted) {
  * @param {*} actual - First comparison object.
  * @param {*} expected - Second comparison object.
  * @param {boolean} [strict] - Comparison mode. If set to `true` use `===`.
+ * @param args
  * @param {object} previousStack - The circular stack.
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
- *  otherwise `false`.
+ * otherwise `false`.
  */
 // eslint-enable jsdoc/require-param
 

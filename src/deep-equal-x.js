@@ -77,6 +77,7 @@ const isIndex = function isIndex(value) {
  * @param {Array|string|object} object - The object to get the `value` from.
  * @param {string|number} key - The `key` reference to the `value`.
  * @param {boolean} isStr - Is the object a string.
+ * @param args
  * @param {boolean} isIdx - Is the `key` a character index.
  * @returns {*} Returns the `value` referenced by the `key`.
  */
@@ -118,9 +119,10 @@ const filterUnwanted = function filterUnwanted(keys, unwanted) {
  * @param {*} actual - First comparison object.
  * @param {*} expected - Second comparison object.
  * @param {boolean} [strict] - Comparison mode. If set to `true` use `===`.
+ * @param args
  * @param {object} previousStack - The circular stack.
  * @returns {boolean} `true` if `actual` and `expected` are deemed equal,
- *  otherwise `false`.
+ * otherwise `false`.
  */
 // eslint-enable jsdoc/require-param
 const baseDeepEqual = function baseDeepEqual(args) {
